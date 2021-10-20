@@ -1,5 +1,6 @@
-all: compiler interpreter
+all: compiler interpreter source
 
+source: Main.class
 compiler: Compiler.class
 interpreter: Interpreter.class
 
@@ -12,17 +13,16 @@ Interpreter.class: Interpreter.java Parser.java
 Compiler.class: Compiler.java Parser.java
 	javac Compiler.java
 
-Main.class: Compiler.class Main.j source.txt
-	head -n 20 Main.j >> Prog.j
-	java Compiler source.txt >> Prog.j
-	tail -n 7 Main.j >> Prog.j
-	jasmin Prog.j
+Main.class Main.j: Compiler.class source.txt
+	java Compiler source.txt
 
-.PHONY: clean
+.PHONY: run clean
+run: Main.class
+	java Main
 
 clean:
 	rm Parse*.java
 	rm Token*.java
 	rm SimpleCharStream.java
 	rm *.class
-	rm Prog.j
+	rm Main.j

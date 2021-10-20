@@ -27,7 +27,9 @@ public class Compiler {
 
             var cb = new CodeBlock();
             ast.compile(cb);
-            cb.dump();
+            cb.dump("Main.j");
+
+            Runtime.getRuntime().exec("java -jar jasmin.jar Main.j").waitFor();
 
         } catch (Exception e) {
             System.out.println ("Syntax Error!");
