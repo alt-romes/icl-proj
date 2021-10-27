@@ -2,9 +2,9 @@ public class ASTUminus implements ASTNode {
 
     ASTNode x;
 
-    public int eval()
+    public int eval(Environment<Integer> e)
     { 
-        int v = x.eval();
+        int v = x.eval(e);
         return -v; 
     }
     

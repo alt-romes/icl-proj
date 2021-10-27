@@ -14,6 +14,14 @@ SKIP :
 
 TOKEN :
 { 
+    < def: "def" >
+    |
+    < in: "in" >
+    |
+    < eq: "=" >
+    |
+    < end: "end" >
+    |
     < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
     |
     < Num: (["0"-"9"]) + >
@@ -31,6 +39,7 @@ TOKEN :
     < RPAR : ")" >
     |
     < EL: "\n" >
+
 }
 
 ASTNode Start() :
@@ -71,7 +80,25 @@ ASTNode Fact() :
     Token tok;
 }
 {
-    ( tok=<Num> { t1 = new ASTNum(Integer.parseInt(tok.image)); } | <LPAR> t1=Exp() <RPAR>
-        | <MINUS> t1=Fact() { t1 = new ASTUminus(t1); } )
+    ( 
+        tok=<Id> { t1 = new ASTId(tok.image); }
+        | tok=<Num> { t1 = new ASTNum(Integer.parseInt(tok.image)); }
+        | <LPAR> t1=Exp() <RPAR>
+        | <MINUS> t1=Fact() { t1 = new ASTUminus(t1); }
+        | t1=Def()
+    )
     { return t1; }  
 }
+
+ASTNode Def() :
+{
+    ASTNode t1, t2;
+    Token tok;
+}
+{
+    (
+        <def> tok=<Id> <eq> t1=Exp() <in> t2=Exp() <end>
+    )
+    { return new ASTDef(tok.image, t1, t2); }
+}
+

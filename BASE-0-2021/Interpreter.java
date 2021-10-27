@@ -14,14 +14,16 @@ public class Interpreter {
                 if (ast == null)
                     System.exit(0);
 
-                System.out.println( ast.eval() );
+                System.out.println( ast.eval(new Environment<Integer>()) );
 
             } catch (Exception e) {
                 System.out.println ("Syntax Error!");
                 System.out.println (e);
                 parser.ReInit(System.in);
             }
+
         }
+
     }
 
 }
