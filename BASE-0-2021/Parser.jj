@@ -1,7 +1,9 @@
 PARSER_BEGIN(Parser)
 
-    /** ID lister. */
-    public class Parser { }
+import java.util.*;
+
+/** ID lister. */
+public class Parser { }
 
 PARSER_END(Parser)
 
@@ -92,13 +94,14 @@ ASTNode Fact() :
 
 ASTNode Def() :
 {
-    ASTNode t1, t2;
+    ASTNode t1, tf;
     Token tok;
+    Map<String, ASTNode> m = new HashMap<>();
 }
 {
     (
-        <def> tok=<Id> <eq> t1=Exp() <in> t2=Exp() <end>
+        <def> (tok=<Id> <eq> t1=Exp() { m.put(tok.image, t1); })+ <in> tf=Exp() <end>
     )
-    { return new ASTDef(tok.image, t1, t2); }
+    { return new ASTDef(m, tf); }
 }
 

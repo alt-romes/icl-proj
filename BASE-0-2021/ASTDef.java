@@ -1,15 +1,21 @@
+import java.util.*;
+
 public class ASTDef implements ASTNode {
 
-    String id;
-    ASTNode e1, e2;
+    Map<String, ASTNode> associations = new HashMap<>();
+    ASTNode ef;
 
-    public int eval(Environment<Integer> e)
-    {
-        var v1 = e1.eval(e);
-        e = e.beginScope();
-        e.assoc(id, v1);
-        var val = e2.eval(e);
-        e = e.endScope(); // useless
+    public int eval(Environment<Integer> e) {
+
+        var scope_env = e.beginScope(); 
+
+        for (var entry : associations.entrySet())
+            scope_env.assoc(entry.getKey(), entry.getValue().eval(e));
+
+        var val = ef.eval(scope_env);
+
+        e = scope_env.endScope(); // useless
+
         return val;
     }
 
@@ -17,11 +23,10 @@ public class ASTDef implements ASTNode {
 
     }
 
-    public ASTDef(String id, ASTNode e1, ASTNode e2)
-    {
-        this.id = id;
-        this.e1 = e1;
-        this.e2 = e2;
+    public ASTDef(Map<String,ASTNode> m, ASTNode ef) {
+        
+        this.associations = m;
+        this.ef = ef;
     }
 }
 
