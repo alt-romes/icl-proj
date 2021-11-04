@@ -1,4 +1,4 @@
-all: compiler interpreter source
+all: clean compiler interpreter source
 
 source: Main.class
 compiler: Compiler.class
@@ -21,8 +21,8 @@ run: Main.class
 	java Main
 
 clean:
-	rm Parse*.java
-	rm Token*.java
-	rm SimpleCharStream.java
-	rm *.class
-	rm Main.j
+	-rm Parse*.java
+	-rm Token*.java
+	-rm SimpleCharStream.java
+	-rm *.class
+	-rm *.j

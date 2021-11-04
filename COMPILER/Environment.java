@@ -2,17 +2,21 @@ import java.util.*;
 
 public class Environment<T> {
     Map<String, T> associations = new HashMap<>();
+    public int depth = 0;
 
-    Environment<T> parent = null;;
+    Environment<T> parent = null;
+
+    public Frame frame = null;
 
     Environment() { }
 
-    Environment(Environment<T> e) {
+    Environment(Environment<T> e, int depth) {
         parent = e;
+        this.depth = depth;
     }
 
     Environment<T> beginScope() {
-        return new Environment<T>(this);
+        return new Environment<T>(this, depth+1);
     }
 
     Environment<T> endScope() {
@@ -22,6 +26,10 @@ public class Environment<T> {
     void assoc(String id, T val) {
          
         associations.put(id, val);
+    }
+
+    void assocFrameType(Frame frame) {
+        this.frame = frame;
     }
 
     T find(String id) {

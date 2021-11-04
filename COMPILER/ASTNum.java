@@ -4,7 +4,7 @@ public class ASTNum implements ASTNode {
 
     public int eval(Environment<Integer> e) { return val; }
 
-    public void compile(CodeBlock c) {
+    public void compile(CodeBlock c, Environment<int[]> e) {
         c.emit("sipush " + val);
     }
 

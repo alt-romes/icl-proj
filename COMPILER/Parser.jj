@@ -94,13 +94,13 @@ ASTNode Fact() :
 
 ASTNode Def() :
 {
-    ASTNode t1, tf;
+    ASTNode tf;
     Token tok;
     Map<String, ASTNode> m = new HashMap<>();
 }
 {
     (
-        <def> (tok=<Id> <eq> t1=Exp() { m.put(tok.image, t1); })+ <in> tf=Exp() <end>
+        <def> (tok=<Id> <eq> tf=Exp() { m.put(tok.image, tf); })+ <in> tf=Exp() <end>
     )
     { return new ASTDef(m, tf); }
 }

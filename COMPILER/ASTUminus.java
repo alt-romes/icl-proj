@@ -8,8 +8,8 @@ public class ASTUminus implements ASTNode {
         return -v; 
     }
     
-    public void compile(CodeBlock c) {
-        x.compile(c);
+    public void compile(CodeBlock c, Environment<int[]> e) {
+        x.compile(c, e);
         c.emit("ineg");
     }
 
