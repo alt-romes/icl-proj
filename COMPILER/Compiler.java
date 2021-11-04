@@ -1,5 +1,5 @@
 import java.io.*;
-
+import java.util.*;
 
 
 /** ID lister. */
@@ -34,10 +34,15 @@ public class Compiler {
             ast.compile(cb, env);
 
             // String[] names = cb.dumpFrames();
-            cb.dumpFrames();
+            Set<String> frames_names = cb.dumpFrames();
             cb.dump("Main.j");
 
-            Runtime.getRuntime().exec("java -jar jasmin.jar Main.j frame_1_object.j frame_1_frame_1_object.j").waitFor();
+            String exec = "java -jar jasmin.jar Main.j";
+            for (var f : frames_names)
+                exec += " " + f + ".j";
+            System.out.println(exec);
+
+            Runtime.getRuntime().exec(exec).waitFor();
 
         } catch (Exception e) {
             System.out.println ("Syntax Error!");

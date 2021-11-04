@@ -53,20 +53,21 @@ public class CodeBlock {
         code.add(String.format(op, fmtargs));
     }
 
-    <T> Frame addFrameType(Environment<T> e) {
+    <T> Frame addFrameType(int size, Environment<T> e) {
         // The first scoped environment's parent will always have a frame because the global environment is started with an empty frame
-        String key = Frame.getFrameTypeName(e.associations.size(), e.parent.frame.type);
+        String key = Frame.getFrameTypeName(size, e.parent.frame.type);
         Frame fr = frame_types.get(key);
         if (fr == null) {
-            fr = new Frame(e.associations.size(), e.parent.frame.type);
+            fr = new Frame(size, e.parent.frame.type);
             frame_types.put(key, fr);
         }
         return fr;
     }
 
-    void dumpFrames() {
+    Set<String> dumpFrames() {
         for (var f : frame_types.values())
             f.dump();
+        return frame_types.keySet();
     }
 
     void dump(String filename) {

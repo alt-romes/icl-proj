@@ -21,7 +21,7 @@ public class Frame {
     }
 
     static String getFrameTypeName(int size, String parent_type) {
-        return "frame_" + size + "_" + (parent_type == "java/lang/Object" ? "object" : parent_type);
+        return "f" + size + (parent_type == "java/lang/Object" ? "o" : parent_type);
     }
 
     void dump() {
