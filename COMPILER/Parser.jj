@@ -16,6 +16,10 @@ SKIP :
 
 TOKEN :
 { 
+    < btrue: "true" >
+    |
+    < bfalse: "false" >
+    |
     < def: "def" >
     |
     < in: "in" >
@@ -27,6 +31,20 @@ TOKEN :
     < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
     |
     < Num: (["0"-"9"]) + >
+    |
+    < RELEQ : "==" >
+    |
+    < RELL : "<" >
+    |
+    < RELLE : "<=" >
+    |
+    < RELG : ">" >
+    |
+    < RELGE : ">=" >
+    |
+    < BAND : "&&" >
+    |
+    < BOR : "||" >
     |
     < PLUS : "+" >
     |
@@ -49,7 +67,35 @@ ASTNode Start() :
     ASTNode t1;
 }
 {
-    ( t1 = Exp() <EL> { return t1; } | <EOF> { return null; })
+    ( t1 = BooleanAdditive() <EL> { return t1; } | <EOF> { return null; })
+}
+
+ASTNode BooleanAdditive():
+{
+    ASTNode t1,t2;
+}
+{
+    t1=BooleanMultiplicative() ( <BOR> t2=BooleanMultiplicative() { t1 = new ASTBOr(t1, t2); } ) *
+    { return t1; }
+}
+
+ASTNode BooleanMultiplicative():
+{
+    ASTNode t1,t2;
+}
+{
+    t1=RelOp() ( <BAND> t2=RelOp() { t1 = new ASTBAnd(t1, t2); } ) *
+    { return t1; }
+}
+
+ASTNode RelOp():
+{
+    ASTNode t1,t2;
+    Token t;
+}
+{
+    t1=Exp() ( ( t=<RELGE> | t=<RELG> | t=<RELLE> | t=<RELL> | t=<RELEQ> ) t2=Exp() { t1 = new ASTRelOp(t1, t2, t.kind); } )?
+    { return t1; }
 }
 
 ASTNode Exp() :
@@ -85,7 +131,7 @@ ASTNode Fact() :
     ( 
         tok=<Id> { t1 = new ASTId(tok.image); }
         | tok=<Num> { t1 = new ASTNum(Integer.parseInt(tok.image)); }
-        | <LPAR> t1=Exp() <RPAR>
+        | <LPAR> t1=BooleanAdditive() <RPAR>
         | <MINUS> t1=Fact() { t1 = new ASTUminus(t1); }
         | t1=Def()
     )

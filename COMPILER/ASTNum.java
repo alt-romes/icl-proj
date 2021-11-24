@@ -2,7 +2,9 @@ public class ASTNum implements ASTNode {
 
     int val;
 
-    public int eval(Environment<Integer> e) { return val; }
+    public LValue eval(Environment<LValue> e) throws TypeError {
+        return new LInt(val);
+    }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
         c.emit("sipush " + val);

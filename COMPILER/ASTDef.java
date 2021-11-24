@@ -5,12 +5,12 @@ public class ASTDef implements ASTNode {
     Map<String, ASTNode> associations = new HashMap<>();
     ASTNode ef;
 
-    public int eval(Environment<Integer> e) {
+    public LValue eval(Environment<LValue> e) throws TypeError {
 
         var scope_env = e.beginScope(); 
 
         for (var entry : associations.entrySet())
-            scope_env.assoc(entry.getKey(), entry.getValue().eval(e));
+            scope_env.assoc(entry.getKey(), entry.getValue().eval(scope_env));
 
         var val = ef.eval(scope_env);
 
@@ -41,21 +41,17 @@ public class ASTDef implements ASTNode {
         c.emit(CodeBlock.STORE_SL);
 
 
-        // The definitions are compiled using the new scope,
-        // but without the associations
         assert scope_env.associations.size() == 0;
 
+        // The definitions are compiled using the new scope,
+        // so that the definitions in this scope can use previous definitions
+        // defined in this same scope
         int i = 0;
-        for (var val : associations.values()) {
+        for (var pair : associations.entrySet()) {
             c.emit(CodeBlock.LOAD_SL);
-            val.compile(c, scope_env);
+            pair.getValue().compile(c, scope_env);
             c.emit("putfield %s/s_%d I", scope_env.frame.type, i);
-            i++;
-        }
-
-        i = 0;
-        for (var key : associations.keySet()) {
-            scope_env.assoc(key, new int[]{scope_env.depth, i});
+            scope_env.assoc(pair.getKey(), new int[]{scope_env.depth, i});
             i++;
         }
 

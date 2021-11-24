@@ -2,16 +2,15 @@ public class ASTId implements ASTNode {
 
     String id;
 
-    public int eval(Environment<Integer> e)
-    { 
+    public LValue eval(Environment<LValue> e) { 
         return e.find(id); 
     }
 
     public void compile(CodeBlock c, Environment<int[]> e)
     {
-        int[] coords = e.find(id); // TODO: could remove find and just while loop until the id in the environment association
+        int[] coords = e.find(id);  /* TODO: could remove find and just while
+                                     * loop until the id in the environment association */
 
-        System.out.println("id: " + id + " has coords " + coords[0] + "," + coords[1]);
         c.emit(CodeBlock.LOAD_SL);
 
         int depth = e.depth;
