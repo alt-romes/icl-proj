@@ -14,7 +14,7 @@ public class Interpreter {
                 if (ast == null)
                     System.exit(0);
 
-                System.out.println( ast.eval(new Environment<LValue>()) );
+                ast.eval(new Environment<LValue>()).show();
 
             } catch (Exception e) {
                 System.out.println ("Syntax Error!");

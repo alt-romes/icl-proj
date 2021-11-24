@@ -67,7 +67,16 @@ ASTNode Start() :
     ASTNode t1;
 }
 {
-    ( t1 = BooleanAdditive() <EL> { return t1; } | <EOF> { return null; })
+    ( t1 = Exp() <EL> { return t1; } | <EOF> { return null; })
+}
+
+ASTNode Exp() :
+{
+    ASTNode t;
+}
+{
+    t=BooleanAdditive()
+    { return t; }
 }
 
 ASTNode BooleanAdditive():
@@ -94,11 +103,11 @@ ASTNode RelOp():
     Token t;
 }
 {
-    t1=Exp() ( ( t=<RELGE> | t=<RELG> | t=<RELLE> | t=<RELL> | t=<RELEQ> ) t2=Exp() { t1 = new ASTRelOp(t1, t2, t.kind); } )?
+    t1=IntegerAdditive() ( ( t=<RELGE> | t=<RELG> | t=<RELLE> | t=<RELL> | t=<RELEQ> ) t2=IntegerAdditive() { t1 = new ASTRelOp(t1, t2, t.kind); } )?
     { return t1; }
 }
 
-ASTNode Exp() :
+ASTNode IntegerAdditive() :
 {
     ASTNode t1,t2;
     Token tok;
