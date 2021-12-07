@@ -16,19 +16,19 @@ SKIP :
 
 TOKEN :
 { 
-    < new: "new" >
+    < _new: "new" >
     |
-    < print: "print" >
+    < _print: "print" >
     |
-    < print: "if" >
+    < _if: "if" >
     |
-    < print: "then" >
+    < _then: "then" >
     |
-    < print: "else" >
+    < _else: "else" >
     |
-    < print: "while" >
+    < _while: "while" >
     |
-    < print: "do" >
+    < _do: "do" >
     |
     < btrue: "true" >
     |
@@ -97,8 +97,17 @@ ASTNode Exp() :
     ASTNode t;
 }
 {
-    t=BooleanAdditive()
+    t=SeqExp()
     { return t; }
+}
+
+ASTNode SeqExp() :
+{
+    ASTNode t1, t2;
+}
+{
+    t1=BooleanAdditive() ( <SEQ> t2=BooleanAdditive() { t1 = new ASTSeq(t1, t2); } ) *
+    { return t1; }
 }
 
 ASTNode BooleanAdditive():

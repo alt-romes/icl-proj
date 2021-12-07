@@ -8,7 +8,7 @@ public class LCell implements LValue {
 
     public void set(LValue v) { val = v; }
 
-    public void show() { System.out.println(val); }
+    public void show() { System.out.println("Cell["+val+"]"); }
 }
 
 interface LValue {
