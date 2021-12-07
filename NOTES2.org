@@ -1,0 +1,55 @@
+* Names
+   Names are a fundamental abstraction
+
+** Naming Syntax
+   *Literals* denote fixed values in every /context/ of
+   occurence. Literals have a fixed meaning.
+
+   *Identifiers* denote values that depend of the context of occurence
+   
+** Binding and Scope
+   The association between an /identifier/ and the /value/ it denotes
+   is called a *binding*
+
+   A *binding* is established in a well-defined syntactical context
+   and is created by a program construct called a *declaration*
+
+   The /syntactical context/ in which the /binding/ is established is
+   called the *scope* of the binding/declaration
+
+** Bind occurences
+   The assignment of a name to a denotation
+
+** Bound occurences
+   For each bound occurence there is one and only one binding
+   occurence (the one occuring in the declaration) Name can be
+   resolved through the binding
+
+** Free occurences
+   Any occurence of an identifier that is not binding nor bound is
+   said *free*
+   
+
+** Open and closed fragments
+   A program fragment is said to be *open* if it contains free
+   occurences of identifiers. Otherwise a program fragment is said to
+   be *closed* (all occurences are closed/bound to a name)
+
+** Semantics of open fragments
+   An executable program is a program without any free identifiers.
+   The meaning of a program fragment can only be computed if the value
+   of every free identifier is known
+   The definition of a compositional semantics for languages with
+   declared identifiers has to consider open fragments
+
+** Environment
+   A closed program necessarily provides bindings for all free ocurrences in it
+
+   Given any fragment \E inside a program \P ....??
+
+   
+
+
+
+
+   
