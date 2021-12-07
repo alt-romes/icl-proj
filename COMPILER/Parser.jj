@@ -46,6 +46,8 @@ TOKEN :
     |
     < BOR : "||" >
     |
+    < BNEG : "~" >
+    |
     < PLUS : "+" >
     |
     < MINUS : "-">
@@ -138,10 +140,13 @@ ASTNode Fact() :
 }
 {
     ( 
-        tok=<Id> { t1 = new ASTId(tok.image); }
-        | tok=<Num> { t1 = new ASTNum(Integer.parseInt(tok.image)); }
+        tok=<Num> { t1 = new ASTNum(Integer.parseInt(tok.image)); }
+        | tok=<btrue> { t1 = new ASTBool(Boolean.parseBoolean(tok.image)); }
+        | tok=<bfalse> { t1 = new ASTBool(Boolean.parseBoolean(tok.image)); }
+        | tok=<Id> { t1 = new ASTId(tok.image); }
         | <LPAR> t1=BooleanAdditive() <RPAR>
         | <MINUS> t1=Fact() { t1 = new ASTUminus(t1); }
+        | <BNEG> t1=Fact() { t1 = new ASTBNeg(t1); }
         | t1=Def()
     )
     { return t1; }  
