@@ -16,6 +16,20 @@ SKIP :
 
 TOKEN :
 { 
+    < new: "new" >
+    |
+    < print: "print" >
+    |
+    < print: "if" >
+    |
+    < print: "then" >
+    |
+    < print: "else" >
+    |
+    < print: "while" >
+    |
+    < print: "do" >
+    |
     < btrue: "true" >
     |
     < bfalse: "false" >
@@ -31,6 +45,12 @@ TOKEN :
     < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
     |
     < Num: (["0"-"9"]) + >
+    |
+    < ASSIGN: ":=" >
+    |
+    < DEREF: "!" >
+    |
+    < SEQ: ";" >
     |
     < RELEQ : "==" >
     |
