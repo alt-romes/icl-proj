@@ -4,12 +4,15 @@ public class ASTWhile implements ASTNode {
 
     public LValue eval(Environment<LValue> e) throws TypeError { 
 
+        LValue l = null;
+
         LValue c = cond.eval(e);
         if (!(c instanceof LBool)) throw new TypeError();
 
-        LValue l = null;
-        while (((LBool)c).val())
+        while (((LBool)c).val()) {
             l = bod.eval(e);
+            c = cond.eval(e);
+        }
 
         return l;
     }
