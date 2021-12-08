@@ -101,11 +101,18 @@ ASTNode TopExpression():
 { ASTNode n; }
 {
     (
-        n=LogicalOrExpression()
-        | n=NewExpression()
+        n=AssignmentExpression()
+        | n=NewExpression() /* TODO: Verify with prof */
         | n=PrintExpression()
     )
     { return n; }
+}
+
+ASTNode AssignmentExpression():
+{ ASTNode n1, n2; }
+{
+    n1=LogicalOrExpression() ( <ASSIGN> n2=TopExpression() { n1 = new ASTAssign(n1, n2); } ) ?
+    { return n1; }
 }
 
 ASTNode LogicalOrExpression():
@@ -161,6 +168,7 @@ ASTNode UnaryExpression():
         t1 = PrimaryExpression()
         | <MINUS> t1=UnaryExpression() { t1 = new ASTUminus(t1); }
         | <BNEG> t1=UnaryExpression()  { t1 = new ASTBNeg(t1); }
+        | <DEREF> t1=UnaryExpression()  { t1 = new ASTDeref(t1); }
         | t1 = DefinitionExpression()
         | t1 = SelectionExpression()
         | t1 = IterationExpression()
