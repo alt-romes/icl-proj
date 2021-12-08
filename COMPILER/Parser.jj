@@ -85,9 +85,7 @@ TOKEN :
 }
 
 ASTNode Start():
-{
-    ASTNode n;
-}
+{ ASTNode n; }
 {
     ( n = Expression() <EL> { return n; } | <EOF> { return null; })
 }
@@ -111,36 +109,19 @@ ASTNode Start():
 ASTNode Expression():
 { ASTNode n; }
 {
-    n = ( DefinitionExpression() | LogicalOrExpression() | SelectionExpression() | IterationExpression() )
+    n=LogicalOrExpression()
     { return n; }
 }
 
-ASTNode DefinitionExpression():
-{
-    ASTNode tf;
-    Token tok;
-    Map<String, ASTNode> m = new HashMap<>();
-}
-{
-    (
-        <def> (tok=<Id> <eq> tf=Expression() { m.put(tok.image, tf); })+ <in> tf=Expression() <end>
-    )
-    { return new ASTDef(m, tf); }
-}
-
 ASTNode LogicalOrExpression():
-{
-    ASTNode t1,t2;
-}
+{ ASTNode t1,t2; }
 {
     t1=LogicalAndExpression() ( <BOR> t2=LogicalAndExpression() { t1 = new ASTBOr(t1, t2); } ) *
     { return t1; }
 }
 
 ASTNode LogicalAndExpression():
-{
-    ASTNode t1,t2;
-}
+{ ASTNode t1,t2; }
 {
     t1=RelationalExpression() ( <BAND> t2=RelationalExpression() { t1 = new ASTBAnd(t1, t2); } ) *
     { return t1; }
@@ -156,7 +137,7 @@ ASTNode RelationalExpression():
     { return t1; }
 }
 
-ASTNode AdditiveExpression() :
+ASTNode AdditiveExpression():
 {
     ASTNode t1,t2;
     Token tok;
@@ -166,10 +147,9 @@ ASTNode AdditiveExpression() :
     t1 = tok.kind == PLUS ? new ASTAdd(t1,t2) : new ASTSub(t1,t2); } ) *
 
     { return t1; }
-
 }
 
-ASTNode MultiplicativeExpression() :
+ASTNode MultiplicativeExpression():
 {
     ASTNode t1,t2;
     Token tok;
@@ -180,16 +160,18 @@ ASTNode MultiplicativeExpression() :
     { return t1; }  
 }
 
-ASTNode UnaryExpression() :
-{
-    ASTNode t1;
-    Token tok;
-}
+ASTNode UnaryExpression():
+{ ASTNode t1; }
 {
     ( 
         t1 = PrimaryExpression()
         | <MINUS> t1=UnaryExpression() { t1 = new ASTUminus(t1); }
         | <BNEG> t1=UnaryExpression()  { t1 = new ASTBNeg(t1); }
+        | t1 = PrintExpression()
+        | t1 = NewExpression()
+        | t1 = DefinitionExpression()
+        | t1 = SelectionExpression()
+        | t1 = IterationExpression()
     )
     { return t1; }  
 }
@@ -208,4 +190,31 @@ ASTNode PrimaryExpression():
         | <LPAR> t1=Expression() <RPAR>
     )
     { return t1; }
+}
+
+ASTNode DefinitionExpression():
+{
+    ASTNode tf;
+    Token tok;
+    Map<String, ASTNode> m = new HashMap<>();
+}
+{
+    (
+        <def> (tok=<Id> <eq> tf=Expression() { m.put(tok.image, tf); })+ <in> tf=Expression() <end>
+    )
+    { return new ASTDef(m, tf); }
+}
+
+ASTNode SelectionExpression():
+{ ASTNode t1, t2, t3; }
+{
+    <_if> t1=Expression() <_then> t2=Expression() <_else> t3=Expression() <end>
+    { return new ASTIf(t1, t2, t3); }
+}
+
+ASTNode IterationExpression():
+{ ASTNode t1, t2; }
+{
+    <_while> t1=Expression() <_do> t2=Expression() <end>
+    { return new ASTWhile(t1, t2); }
 }
