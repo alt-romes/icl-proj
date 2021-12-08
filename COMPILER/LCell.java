@@ -8,12 +8,6 @@ public class LCell implements LValue {
 
     public void set(LValue v) { val = v; }
 
-    public void show() { System.out.println("Cell["+val+"]"); }
-}
-
-interface LValue {
-
-    void show();
-
+    public void show() { System.out.print("Cell: "); val.show(); }
 }
 

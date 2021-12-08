@@ -90,38 +90,33 @@ ASTNode Start():
     ( n = Expression() <EL> { return n; } | <EOF> { return null; })
 }
 
-/* ASTNode ExpressionList(): */
-/* { ASTNode n1, n2; } */
-/* { */
-/*     n1=Expression() ( <SEQ> n2=Expression() { n = new ASTSeq(n1, n2); } ) * */
-/*     { return n1; } */
-/* } */
-
-/* ASTNode SeqExp() : */
-/* { */
-/*     ASTNode t1, t2; */
-/* } */
-/* { */
-/*     t1=BooleanAdditive() ( <SEQ> t2=BooleanAdditive() { t1 = new ASTSeq(t1, t2); } ) * */
-/*     { return t1; } */
-/* } */
-
 ASTNode Expression():
+{ ASTNode n1, n2; }
+{
+    n1=TopExpression() ( <SEQ> n2=TopExpression() { n1 = new ASTSeq(n1, n2); } ) *
+    { return n1; }
+}
+
+ASTNode TopExpression():
 { ASTNode n; }
 {
-    n=LogicalOrExpression()
+    (
+        n=LogicalOrExpression()
+        | n=NewExpression()
+        | n=PrintExpression()
+    )
     { return n; }
 }
 
 ASTNode LogicalOrExpression():
-{ ASTNode t1,t2; }
+{ ASTNode t1, t2; }
 {
     t1=LogicalAndExpression() ( <BOR> t2=LogicalAndExpression() { t1 = new ASTBOr(t1, t2); } ) *
     { return t1; }
 }
 
 ASTNode LogicalAndExpression():
-{ ASTNode t1,t2; }
+{ ASTNode t1, t2; }
 {
     t1=RelationalExpression() ( <BAND> t2=RelationalExpression() { t1 = new ASTBAnd(t1, t2); } ) *
     { return t1; }
@@ -144,8 +139,7 @@ ASTNode AdditiveExpression():
 }
 {
     t1 = MultiplicativeExpression() ( ( tok=<PLUS> | tok=<MINUS> ) t2=MultiplicativeExpression() { 
-    t1 = tok.kind == PLUS ? new ASTAdd(t1,t2) : new ASTSub(t1,t2); } ) *
-
+                                     t1 = tok.kind == PLUS ? new ASTAdd(t1,t2) : new ASTSub(t1,t2); } ) *
     { return t1; }
 }
 
@@ -167,8 +161,6 @@ ASTNode UnaryExpression():
         t1 = PrimaryExpression()
         | <MINUS> t1=UnaryExpression() { t1 = new ASTUminus(t1); }
         | <BNEG> t1=UnaryExpression()  { t1 = new ASTBNeg(t1); }
-        | t1 = PrintExpression()
-        | t1 = NewExpression()
         | t1 = DefinitionExpression()
         | t1 = SelectionExpression()
         | t1 = IterationExpression()
@@ -190,6 +182,20 @@ ASTNode PrimaryExpression():
         | <LPAR> t1=Expression() <RPAR>
     )
     { return t1; }
+}
+
+ASTNode PrintExpression():
+{ ASTNode n; }
+{
+    <_print> n=TopExpression()
+    { return new ASTPrint(n); }
+}
+
+ASTNode NewExpression():
+{ ASTNode n; }
+{
+    <_new> n=TopExpression()
+    { return new ASTNew(n); }
 }
 
 ASTNode DefinitionExpression():

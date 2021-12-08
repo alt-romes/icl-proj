@@ -1,4 +1,4 @@
-public class ASTPrintln implements ASTNode {
+public class ASTPrint implements ASTNode {
 
     ASTNode x;
 
@@ -15,7 +15,7 @@ public class ASTPrintln implements ASTNode {
         // TODO
     }
 
-    public ASTPrintln(ASTNode x)
+    public ASTPrint(ASTNode x)
     {
         this.x = x;
     }
