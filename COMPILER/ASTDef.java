@@ -77,5 +77,21 @@ public class ASTDef implements ASTNode {
         this.associations = m;
         this.ef = ef;
     }
+
+    public LType typecheck(Environment<LType> e) throws TypeError {
+
+        // TODO: Que tipo de type annotations é para suportarmos?
+
+        var scope_env = e.beginScope(); 
+
+        for (var entry : associations.entrySet())
+            scope_env.assoc(entry.getKey(), entry.getValue().typecheck(scope_env));
+
+        LType eft = ef.typecheck(scope_env);
+
+        e = scope_env.endScope(); // useless
+
+        return eft;
+    }
 }
 

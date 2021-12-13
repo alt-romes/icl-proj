@@ -14,8 +14,12 @@ public class Interpreter {
                 if (ast == null)
                     System.exit(0);
 
+                ast.typecheck(new Environment<LType>());
+
                 ast.eval(new Environment<LValue>()).show();
 
+            } catch (TypeError e) {
+                System.out.println(e);
             } catch (Exception e) {
                 System.out.println ("Syntax Error!");
                 System.out.println (e);

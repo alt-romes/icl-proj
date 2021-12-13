@@ -5,8 +5,6 @@ public class ASTAssign implements ASTNode {
     public LValue eval(Environment<LValue> e) throws TypeError { 
 
         LValue v1 = lhs.eval(e);
-        if (!(v1 instanceof LCell)) throw new TypeError("Illegal arguments to := operator");
-
         LValue v2 = rhs.eval(e);
         ((LCell)v1).set(v2);
 
@@ -21,6 +19,12 @@ public class ASTAssign implements ASTNode {
     {
         lhs = l; rhs = r;
     }
-}
 
+    public LType typecheck(Environment<LType> e) throws TypeError {
+        LType l = lhs.typecheck(e);
+        if (!(l instanceof LRefType)) throw new TypeError("Illegal arguments to := operator, left operand is not a reference.");
+
+        return rhs.typecheck(e);
+    }
+}
 

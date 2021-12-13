@@ -15,6 +15,10 @@ public class ASTNew implements ASTNode {
     {
         this.x = x;
     }
-}
 
+    public LType typecheck(Environment<LType> e) throws TypeError {
+
+        return new LRefType(x.typecheck(e));
+    }
+}
 

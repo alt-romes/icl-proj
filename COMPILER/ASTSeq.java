@@ -19,6 +19,11 @@ public class ASTSeq implements ASTNode {
     {
         lhs = l; rhs = r;
     }
-}
 
+    public LType typecheck(Environment<LType> e) throws TypeError {
+
+        lhs.typecheck(e);
+        return rhs.typecheck(e);
+    }
+}
 

@@ -5,10 +5,8 @@ public class ASTAdd implements ASTNode {
     public LValue eval(Environment<LValue> e) throws TypeError { 
 
         LValue v1 = lhs.eval(e);
-        if (!(v1 instanceof LInt)) throw new TypeError();
 
         LValue v2 = rhs.eval(e);
-        if (!(v2 instanceof LInt)) throw new TypeError();
 
         return new LInt(((LInt)v1).val()+((LInt)v2).val());
     }
@@ -19,9 +17,19 @@ public class ASTAdd implements ASTNode {
         c.emit("iadd");
     }
 
+    public LType typecheck(Environment<LType> e) throws TypeError {
+        LType l = lhs.typecheck(e);
+        LType r = rhs.typecheck(e);
+        if (l instanceof LIntType && r instanceof LIntType)
+            return LIntType.get();
+
+        throw new TypeError("Addition must be done with two integers");
+    }
+
     public ASTAdd(ASTNode l, ASTNode r)
     {
         lhs = l; rhs = r;
     }
+
 }
 

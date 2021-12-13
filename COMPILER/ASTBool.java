@@ -14,5 +14,10 @@ public class ASTBool implements ASTNode {
     public ASTBool(boolean b) {
         val = b;
     }
+
+    public LType typecheck(Environment<LType> e) {
+
+        return LBoolType.get();
+    }
 }
 

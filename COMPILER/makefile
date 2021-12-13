@@ -16,7 +16,7 @@ Compiler.class: Compiler.java Parser.java
 Main.class Main.j: Compiler.class source.txt
 	java Compiler source.txt
 
-.PHONY: run clean
+.PHONY: run clean test
 run: Main.class
 	java Main
 
@@ -26,3 +26,6 @@ clean:
 	-rm SimpleCharStream.java
 	-rm *.class
 	-rm *.j
+
+test:
+	./run-tests.sh

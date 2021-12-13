@@ -19,5 +19,10 @@ public class ASTPrint implements ASTNode {
     {
         this.x = x;
     }
+
+    public LType typecheck(Environment<LType> e) throws TypeError {
+
+        return x.typecheck(e);
+    }
 }
 

@@ -1,0 +1,4 @@
+interface LType {
+
+    String show();
+}

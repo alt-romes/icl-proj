@@ -1,0 +1,2 @@
+def n=5 i=new 2 res=new !i in while !i <= n do res := !res * !i; i := !i + 1 end; print !res end
+

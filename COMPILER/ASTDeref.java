@@ -5,7 +5,6 @@ public class ASTDeref implements ASTNode {
     public LValue eval(Environment<LValue> e) throws TypeError { 
 
         LValue v = x.eval(e);
-        if (!(v instanceof LCell)) throw new TypeError();
 
         return ((LCell)v).get();
     }
@@ -17,6 +16,14 @@ public class ASTDeref implements ASTNode {
     public ASTDeref(ASTNode x)
     {
         this.x = x;
+    }
+
+    public LType typecheck(Environment<LType> e) throws TypeError {
+
+        LType t = x.typecheck(e);
+        if (!(t instanceof LRefType)) throw new TypeError("Can only dereference references!");
+
+        return t;
     }
 }
 

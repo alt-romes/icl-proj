@@ -27,6 +27,8 @@ public class Compiler {
             if (ast == null)
                 System.exit(0);
 
+            ast.typecheck(new Environment<LType>());
+
             var cb = new CodeBlock();
             Environment<int[]> env = new Environment<int[]>();
             env.assocFrameType(new Frame()); // Empty frame has type Object, and first scope will have a null pointer to ancestor of type Object (this frame's type)
@@ -44,6 +46,8 @@ public class Compiler {
 
             Runtime.getRuntime().exec(exec).waitFor();
 
+        } catch (TypeError e) {
+            System.out.println(e);
         } catch (Exception e) {
             System.out.println ("Syntax Error!");
             System.out.println (e);

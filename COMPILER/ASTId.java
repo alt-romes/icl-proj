@@ -26,5 +26,9 @@ public class ASTId implements ASTNode {
     {
         this.id = id;
     }
+
+    public LType typecheck(Environment<LType> e) {
+        return e.find(id);
+    }
 }
 

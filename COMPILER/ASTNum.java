@@ -15,5 +15,9 @@ public class ASTNum implements ASTNode {
         val = n;
     }
 
+    public LType typecheck(Environment<LType> e) {
+
+        return LIntType.get();
+    }
 }
 

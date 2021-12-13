@@ -23,5 +23,15 @@ public class ASTDiv implements ASTNode {
     {
         lhs = l; rhs = r;
     }
+
+    public LType typecheck(Environment<LType> e) throws TypeError {
+
+        LType l = lhs.typecheck(e);
+        LType r = rhs.typecheck(e);
+        if (l instanceof LIntType && r instanceof LIntType)
+            return LIntType.get();
+
+        throw new TypeError("Division must be done with two booleans");
+    }
 }
 

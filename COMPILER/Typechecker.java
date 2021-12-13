@@ -1,0 +1,5 @@
+class Typechecker {
+
+    public Typechecker() {}
+
+}

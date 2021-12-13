@@ -4,7 +4,6 @@ public class ASTBNeg implements ASTNode {
 
     public LValue eval(Environment<LValue> e) throws TypeError { 
         LValue v = x.eval(e);
-        if (!(v instanceof LBool)) throw new TypeError();
 
         return new LBool(!((LBool)v).val()); 
     }
@@ -16,6 +15,13 @@ public class ASTBNeg implements ASTNode {
     {
         this.x = x;
     }
-}
 
+    public LType typecheck(Environment<LType> e) throws TypeError {
+
+        LType t = x.typecheck(e);
+        if (!(t instanceof LBoolType)) throw new TypeError("Negation can only be applied to a boolean.");
+
+        return t;
+    }
+}
 

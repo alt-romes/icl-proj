@@ -7,7 +7,6 @@ public class ASTWhile implements ASTNode {
         LValue l = null;
 
         LValue c = cond.eval(e);
-        if (!(c instanceof LBool)) throw new TypeError();
 
         while (((LBool)c).val()) {
             l = bod.eval(e);
@@ -24,6 +23,15 @@ public class ASTWhile implements ASTNode {
     public ASTWhile(ASTNode c, ASTNode b)
     {
         cond = c; bod = b;
+    }
+
+    public LType typecheck(Environment<LType> e) throws TypeError {
+        
+        LType c = cond.typecheck(e);
+
+        if (!(c instanceof LBoolType)) throw new TypeError("While condition must be a boolean.");
+
+        return bod.typecheck(e);
     }
 }
 

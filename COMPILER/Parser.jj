@@ -93,25 +93,14 @@ ASTNode Start():
 ASTNode Expression():
 { ASTNode n1, n2; }
 {
-    n1=TopExpression() ( <SEQ> n2=TopExpression() { n1 = new ASTSeq(n1, n2); } ) *
+    n1=AssignmentExpression() ( <SEQ> n2=AssignmentExpression() { n1 = new ASTSeq(n1, n2); } ) *
     { return n1; }
-}
-
-ASTNode TopExpression():
-{ ASTNode n; }
-{
-    (
-        n=AssignmentExpression()
-        | n=NewExpression() /* TODO: Verify with prof */
-        | n=PrintExpression()
-    )
-    { return n; }
 }
 
 ASTNode AssignmentExpression():
 { ASTNode n1, n2; }
 {
-    n1=LogicalOrExpression() ( <ASSIGN> n2=TopExpression() { n1 = new ASTAssign(n1, n2); } ) ?
+    n1=LogicalOrExpression() ( <ASSIGN> n2=LogicalOrExpression() { n1 = new ASTAssign(n1, n2); } ) *
     { return n1; }
 }
 
@@ -166,12 +155,17 @@ ASTNode UnaryExpression():
 {
     ( 
         t1 = PrimaryExpression()
-        | <MINUS> t1=UnaryExpression() { t1 = new ASTUminus(t1); }
-        | <BNEG> t1=UnaryExpression()  { t1 = new ASTBNeg(t1); }
+
+        | <MINUS> t1=UnaryExpression()  { t1 = new ASTUminus(t1); }
+        | <BNEG> t1=UnaryExpression()   { t1 = new ASTBNeg(t1); }
         | <DEREF> t1=UnaryExpression()  { t1 = new ASTDeref(t1); }
+        | <_new> t1=UnaryExpression()   { t1 = new ASTNew(t1); }
+        | <_print> t1=UnaryExpression() { t1 = new ASTPrint(t1); }
+
         | t1 = DefinitionExpression()
         | t1 = SelectionExpression()
         | t1 = IterationExpression()
+
     )
     { return t1; }  
 }
@@ -190,20 +184,6 @@ ASTNode PrimaryExpression():
         | <LPAR> t1=Expression() <RPAR>
     )
     { return t1; }
-}
-
-ASTNode PrintExpression():
-{ ASTNode n; }
-{
-    <_print> n=TopExpression()
-    { return new ASTPrint(n); }
-}
-
-ASTNode NewExpression():
-{ ASTNode n; }
-{
-    <_new> n=TopExpression()
-    { return new ASTNew(n); }
 }
 
 ASTNode DefinitionExpression():
