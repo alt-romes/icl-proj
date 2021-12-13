@@ -6,4 +6,5 @@ public class LRefType implements LType {
 
     public String show() { return "Ref [ " + valType.show() + " ]"; }
 
+    public LType getInnerType() { return valType; }
 }

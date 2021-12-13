@@ -23,7 +23,7 @@ public class ASTDeref implements ASTNode {
         LType t = x.typecheck(e);
         if (!(t instanceof LRefType)) throw new TypeError("Can only dereference references!");
 
-        return t;
+        return ((LRefType)t).getInnerType();
     }
 }
 
