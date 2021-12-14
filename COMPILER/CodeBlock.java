@@ -47,6 +47,8 @@ public class CodeBlock {
 
     public Map<String, Frame> frame_types = new HashMap<>();
 
+    private final Map<String, LRefType> refcell_types = new HashMap<>();
+
     List<String> code = new LinkedList<String>();
 
     void emit(String op, Object ...fmtargs) {
@@ -70,12 +72,18 @@ public class CodeBlock {
         return frame_types.keySet();
     }
 
+    Set<String> dumpRefCells() {
+        for (var t : refcell_types.values())
+            t.dump();
+        return refcell_types.keySet();
+    }
+
     void dump(String filename) {
         try {
             FileWriter fw = new FileWriter(filename);
             fw.write(head);
-            for (int i=0; i<code.size(); i++) {
-                fw.write(code.get(i) + "\n");
+            for (String s : code) {
+                fw.write(s + "\n");
             }
             fw.write(tail);
             fw.close();
@@ -86,4 +94,10 @@ public class CodeBlock {
     }
     
     CodeBlock() { }
+
+    public void addRefCellType(LRefType type) {
+
+        String key = type.getJVMTypeName();
+        refcell_types.putIfAbsent(key, type);
+    }
 }

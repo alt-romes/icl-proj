@@ -18,5 +18,10 @@ public class LIntType implements LType {
 
         return o instanceof LIntType;
     }
+
+    @Override
+    public String getJVMTypeName() {
+        return "I";
+    }
 }
 

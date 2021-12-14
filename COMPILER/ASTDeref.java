@@ -2,6 +2,9 @@ public class ASTDeref implements ASTNode {
 
     ASTNode x;
 
+    LRefType x_type;
+    LType self_type;
+
     public LValue eval(Environment<LValue> e) { 
 
         LValue v = x.eval(e);
@@ -10,7 +13,8 @@ public class ASTDeref implements ASTNode {
     }
     
     public void compile(CodeBlock c, Environment<int[]> e) {
-        // TODO
+        x.compile(c, e);
+        c.emit("getfield %s/v %s", x_type, self_type);
     }
 
     public ASTDeref(ASTNode x)
@@ -23,7 +27,10 @@ public class ASTDeref implements ASTNode {
         LType t = x.typecheck(e);
         if (!(t instanceof LRefType)) throw new TypeError("Can only dereference references!");
 
-        return ((LRefType)t).getInnerType();
+        x_type = ((LRefType)t);
+        self_type = ((LRefType)t).getInnerType();
+
+        return self_type;
     }
 }
 

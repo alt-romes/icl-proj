@@ -2,6 +2,8 @@ public class ASTAssign implements ASTNode {
 
     ASTNode lhs, rhs;
 
+    LType left_type, right_type;
+
     public LValue eval(Environment<LValue> e) { 
 
         LValue v1 = lhs.eval(e);
@@ -12,7 +14,9 @@ public class ASTAssign implements ASTNode {
     }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
-        //TODO
+        lhs.compile(c, e);
+        rhs.compile(c, e);
+        c.emit("putfield %s/v %s", left_type, right_type);
     }
 
     public ASTAssign(ASTNode l, ASTNode r)
@@ -23,9 +27,11 @@ public class ASTAssign implements ASTNode {
     public LType typecheck(Environment<LType> e) throws TypeError {
         LType l = lhs.typecheck(e);
         if (!(l instanceof LRefType)) throw new TypeError("Illegal arguments to := operator, left operand is not a reference.");
+        left_type = l;
 
         LType r = rhs.typecheck(e);
         if (!(r.equals(((LRefType)l).getInnerType()))) throw new TypeError("Right side of := operator must match inner type of left operand reference.");
+        right_type = r;
 
         return r;
     }

@@ -18,5 +18,10 @@ public class LBoolType implements LType {
 
         return o instanceof LBoolType;
     }
+
+    @Override
+    public String getJVMTypeName() {
+        return "Z";
+    }
 }
 
