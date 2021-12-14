@@ -2,7 +2,7 @@ public class ASTUminus implements ASTNode {
 
     ASTNode x;
 
-    public LValue eval(Environment<LValue> e) throws TypeError { 
+    public LValue eval(Environment<LValue> e) { 
         LValue v = x.eval(e);
 
         return new LInt(-((LInt)v).val()); 

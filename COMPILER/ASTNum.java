@@ -2,7 +2,7 @@ public class ASTNum implements ASTNode {
 
     int val;
 
-    public LValue eval(Environment<LValue> e) throws TypeError {
+    public LValue eval(Environment<LValue> e) {
         return new LInt(val);
     }
 

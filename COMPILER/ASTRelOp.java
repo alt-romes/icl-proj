@@ -3,15 +3,13 @@ public class ASTRelOp implements ASTNodeX {
     ASTNode lhs, rhs;
     int op;
 
-    public LValue eval(Environment<LValue> e) throws TypeError { 
+    public LValue eval(Environment<LValue> e) { 
 
         LValue v1 = lhs.eval(e);
-        if (!(v1 instanceof LInt)) throw new TypeError();
-        int v1i = ((LInt)v1).val();
+        int v1i = ((LInt)v1).val(); // TODO: Can also be boolean
 
         LValue v2 = rhs.eval(e);
-        if (!(v2 instanceof LInt)) throw new TypeError();
-        int v2i = ((LInt)v2).val();
+        int v2i = ((LInt)v2).val(); // TODO: Ditto
 
         switch (op) {
             case ParserConstants.RELEQ:

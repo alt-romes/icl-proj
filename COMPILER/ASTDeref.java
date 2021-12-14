@@ -2,7 +2,7 @@ public class ASTDeref implements ASTNode {
 
     ASTNode x;
 
-    public LValue eval(Environment<LValue> e) throws TypeError { 
+    public LValue eval(Environment<LValue> e) { 
 
         LValue v = x.eval(e);
 

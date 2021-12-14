@@ -2,7 +2,7 @@ public class ASTNew implements ASTNode {
 
     ASTNode x;
 
-    public LValue eval(Environment<LValue> e) throws TypeError { 
+    public LValue eval(Environment<LValue> e) { 
 
         return new LCell(x.eval(e));
     }

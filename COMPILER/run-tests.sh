@@ -35,7 +35,11 @@ while IFS='' read -r line; do tests+=("$line"); done < <(find tests -maxdepth 1 
 # Define command to run tests here
 run_command() {
     test_name=$1
-    java Interpreter < tests/"$test_name".test
+    if [ "$test_name" = "compiler-*" ]; then
+        java Compiler tests/"$test_name.test"
+    else
+        java Interpreter < tests/"$test_name.test"
+    fi
 }
 
 if [ "$1" ]

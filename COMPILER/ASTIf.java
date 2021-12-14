@@ -2,7 +2,7 @@ public class ASTIf implements ASTNode {
 
     ASTNode cond, lhs, rhs;
 
-    public LValue eval(Environment<LValue> e) throws TypeError { 
+    public LValue eval(Environment<LValue> e) { 
 
         LValue c = cond.eval(e);
 
@@ -24,8 +24,7 @@ public class ASTIf implements ASTNode {
         c.emit("LExit:");
     }
 
-    public ASTIf(ASTNode c, ASTNode l, ASTNode r)
-    {
+    public ASTIf(ASTNode c, ASTNode l, ASTNode r) {
         cond = c; lhs = l; rhs = r;
     }
 

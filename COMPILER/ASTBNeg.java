@@ -2,7 +2,7 @@ public class ASTBNeg implements ASTNodeX {
 
     ASTNode x;
 
-    public LValue eval(Environment<LValue> e) throws TypeError { 
+    public LValue eval(Environment<LValue> e) { 
         LValue v = x.eval(e);
 
         return new LBool(!((LBool)v).val()); 

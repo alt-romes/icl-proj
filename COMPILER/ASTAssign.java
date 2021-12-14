@@ -2,7 +2,7 @@ public class ASTAssign implements ASTNode {
 
     ASTNode lhs, rhs;
 
-    public LValue eval(Environment<LValue> e) throws TypeError { 
+    public LValue eval(Environment<LValue> e) { 
 
         LValue v1 = lhs.eval(e);
         LValue v2 = rhs.eval(e);

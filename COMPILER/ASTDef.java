@@ -5,7 +5,7 @@ public class ASTDef implements ASTNode {
     Map<String, ASTNode> associations = new HashMap<>();
     ASTNode ef;
 
-    public LValue eval(Environment<LValue> e) throws TypeError {
+    public LValue eval(Environment<LValue> e) {
 
         var scope_env = e.beginScope(); 
 

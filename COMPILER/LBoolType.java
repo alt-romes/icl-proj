@@ -13,5 +13,10 @@ public class LBoolType implements LType {
             
         return t;
     }
+
+    public boolean equals(LType o) {
+
+        return o instanceof LBoolType;
+    }
 }
 

@@ -1,4 +1,4 @@
-public class ASTId implements ASTNode {
+public class ASTId implements ASTNodeX {
 
     String id;
 
@@ -20,6 +20,15 @@ public class ASTId implements ASTNode {
         }
     
         c.emit("getfield %s/s_%d I", e.frame.type, coords[1]);
+    }
+
+    public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
+
+        compile(c, e); // Put bool value on top of stack
+        c.emit("ifeq L1"); // If false
+        c.emit("goto " + tl); // Else jump to true
+        c.emit("L1:"); // Jump to false
+        c.emit("goto " + fl);
     }
 
     public ASTId(String id)

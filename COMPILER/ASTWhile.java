@@ -2,7 +2,7 @@ public class ASTWhile implements ASTNode {
 
     ASTNode cond, bod;
 
-    public LValue eval(Environment<LValue> e) throws TypeError { 
+    public LValue eval(Environment<LValue> e) { 
 
         LValue l = null;
 

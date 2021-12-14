@@ -1,6 +1,6 @@
 public interface ASTNode {
 
-    LValue eval(Environment<LValue> e) throws TypeError;
+    LValue eval(Environment<LValue> e);
 
     void compile(CodeBlock c, Environment<int[]> e);
 
