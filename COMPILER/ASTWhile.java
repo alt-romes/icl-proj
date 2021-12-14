@@ -17,14 +17,17 @@ public class ASTWhile implements ASTNode {
     }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
-        c.emit("LStart:");
+        String l1 = "LWhileStart" + GlobalCounter.inc(),
+               l2 = "LWhileTL"    + GlobalCounter.inc(),
+               l3 = "LWhileFL"    + GlobalCounter.inc();
+        c.emit(l1 + ":");
         // Cast guaranteed by type system
-        ((ASTNodeX)cond).compileShortCircuit(c, e, "TL", "FL");
-        c.emit("TL:");
+        ((ASTNodeX)cond).compileShortCircuit(c, e, l2, l3);
+        c.emit(l2 + ":");
         bod.compile(c, e);
         c.emit("pop");
-        c.emit("goto LStart");
-        c.emit("FL:");
+        c.emit("goto " + l1);
+        c.emit(l3  + ":");
     }
 
     public ASTWhile(ASTNode c, ASTNode b)

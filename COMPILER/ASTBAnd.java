@@ -17,8 +17,9 @@ public class ASTBAnd implements ASTNodeX {
     }
 
     public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
-        ((ASTNodeX)lhs).compileShortCircuit(c, e, tl + "aux", fl);
-        c.emit(tl+"aux:");
+        String laux = tl + "aux" + GlobalCounter.inc();
+        ((ASTNodeX)lhs).compileShortCircuit(c, e, laux, fl);
+        c.emit(laux + ":");
         ((ASTNodeX)rhs).compileShortCircuit(c, e, tl, fl);
     }
     

@@ -29,32 +29,34 @@ public class ASTRelOp implements ASTNodeX {
     }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
+        String l1 = "L" + GlobalCounter.inc(),
+               l2 = "L" + GlobalCounter.inc();
         lhs.compile(c, e);
         rhs.compile(c, e);
         c.emit("isub");
         switch (op) {
             case ParserConstants.RELEQ:
-                c.emit("ifeq L1");
+                c.emit("ifeq " + l1);
                 break;
             /* case  RELNEQ ... c.emit("ifne " + tl); */
             case ParserConstants.RELL:
-                c.emit("iflt L1");
+                c.emit("iflt " + l1);
                 break;
             case ParserConstants.RELLE:
-                c.emit("ifle L1");
+                c.emit("ifle " + l1);
                 break;
             case ParserConstants.RELG:
-                c.emit("ifgt L1");
+                c.emit("ifgt " + l1);
                 break;
             case ParserConstants.RELGE:
-                c.emit("ifge L1");
+                c.emit("ifge " + l1);
                 break;
         }
         c.emit("sipush 0");
-        c.emit("goto L2");
-        c.emit("L1:");
+        c.emit("goto " + l2);
+        c.emit(l1 + ":");
         c.emit("sipush 1");
-        c.emit("L2:");
+        c.emit(l2 + ":");
     }
 
     public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {

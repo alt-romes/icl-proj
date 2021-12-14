@@ -17,8 +17,9 @@ public class ASTBOr implements ASTNodeX {
     }
 
     public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
-        ((ASTNodeX)lhs).compileShortCircuit(c, e, tl, fl + "aux");
-        c.emit(tl+"aux:");
+        String laux =  fl + "aux" + GlobalCounter.inc();
+        ((ASTNodeX)lhs).compileShortCircuit(c, e, tl, laux);
+        c.emit(laux + ":");
         ((ASTNodeX)rhs).compileShortCircuit(c, e, tl, fl);
     }
 

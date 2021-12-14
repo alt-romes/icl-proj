@@ -14,14 +14,17 @@ public class ASTIf implements ASTNode {
     }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
+        String l1 = "IfTL" + GlobalCounter.inc(),
+               l2 = "IfFL" + GlobalCounter.inc(),
+               l3 = "IfEX" + GlobalCounter.inc();
         // Cast guaranteed by type system
-        ((ASTNodeX)cond).compileShortCircuit(c, e, "TL", "FL");
-        c.emit("TL:");
+        ((ASTNodeX)cond).compileShortCircuit(c, e, l1, l2);
+        c.emit(l1 + ":");
         lhs.compile(c, e);
-        c.emit("goto LExit");
-        c.emit("FL:");
+        c.emit("goto " + l3);
+        c.emit(l2 + ":");
         rhs.compile(c, e);
-        c.emit("LExit:");
+        c.emit(l3 + ":");
     }
 
     public ASTIf(ASTNode c, ASTNode l, ASTNode r) {

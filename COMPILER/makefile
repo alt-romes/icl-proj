@@ -1,6 +1,5 @@
-all: clean compiler interpreter source
+all: clean compiler interpreter test
 
-source: Main.class
 compiler: Compiler.class
 interpreter: Interpreter.class
 
@@ -13,13 +12,10 @@ Interpreter.class: Interpreter.java Parser.java
 Compiler.class: Compiler.java Parser.java
 	javac Compiler.java
 
-Main.class Main.j: Compiler.class source.txt
-	java Compiler source.txt
+# Main.class Main.j: Compiler.class source.txt
+# 	java Compiler source.txt
 
-.PHONY: run clean test
-run: Main.class
-	java Main
-
+.PHONY: clean test
 clean:
 	-rm Parse*.java
 	-rm Token*.java

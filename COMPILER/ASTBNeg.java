@@ -9,13 +9,15 @@ public class ASTBNeg implements ASTNodeX {
     }
     
     public void compile(CodeBlock c, Environment<int[]> e) {
+        String l1 = "L" + GlobalCounter.inc(),
+               l2 = "L" + GlobalCounter.inc();
         x.compile(c, e);
-        c.emit("ifeq L1");
+        c.emit("ifeq " + l1);
         c.emit("sipush 0");
-        c.emit("goto L2");
-        c.emit("L1:");
+        c.emit("goto " + l2);
+        c.emit(l1 + ":");
         c.emit("sipush 1");
-        c.emit("L2:");
+        c.emit(l2 + ":");
     }
 
     public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
