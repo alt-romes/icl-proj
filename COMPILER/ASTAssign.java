@@ -24,7 +24,10 @@ public class ASTAssign implements ASTNode {
         LType l = lhs.typecheck(e);
         if (!(l instanceof LRefType)) throw new TypeError("Illegal arguments to := operator, left operand is not a reference.");
 
-        return rhs.typecheck(e);
+        LType r = rhs.typecheck(e);
+        if (!(r.equals(((LRefType)l).getInnerType()))) throw new TypeError("Right side of := operator must match inner type of left operand reference.");
+
+        return r;
     }
 }
 

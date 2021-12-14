@@ -1,4 +1,4 @@
-public class ASTBAnd implements ASTNode {
+public class ASTBAnd implements ASTNodeX {
 
     ASTNode lhs, rhs;
 
@@ -11,12 +11,17 @@ public class ASTBAnd implements ASTNode {
     }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
-        // TODO:
-        // lhs.compile(c, e);
-        // rhs.compile(c, e);
-        // c.emit("iadd");
+        lhs.compile(c, e);
+        rhs.compile(c, e);
+        c.emit("iand");
     }
 
+    public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
+        ((ASTNodeX)lhs).compileShortCircuit(c, e, tl + "aux", fl);
+        c.emit(tl+"aux:");
+        ((ASTNodeX)rhs).compileShortCircuit(c, e, tl, fl);
+    }
+    
     public ASTBAnd(ASTNode l, ASTNode r)
     {
         lhs = l; rhs = r;

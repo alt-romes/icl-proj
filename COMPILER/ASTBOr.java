@@ -1,4 +1,4 @@
-public class ASTBOr implements ASTNode {
+public class ASTBOr implements ASTNodeX {
 
     ASTNode lhs, rhs;
 
@@ -11,10 +11,15 @@ public class ASTBOr implements ASTNode {
     }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
-        // TODO
-        // lhs.compile(c, e);
-        // rhs.compile(c, e);
-        // c.emit("iadd");
+        lhs.compile(c, e);
+        rhs.compile(c, e);
+        c.emit("ior");
+    }
+
+    public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
+        ((ASTNodeX)lhs).compileShortCircuit(c, e, tl, fl + "aux");
+        c.emit(tl+"aux:");
+        ((ASTNodeX)rhs).compileShortCircuit(c, e, tl, fl);
     }
 
     public ASTBOr(ASTNode l, ASTNode r)

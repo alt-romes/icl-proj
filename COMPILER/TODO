@@ -1,3 +1,5 @@
 add memory
 Tests for all type errors...
 Fix test 5
+LType.equals(.)
+Make labels incremental..

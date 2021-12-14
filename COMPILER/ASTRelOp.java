@@ -1,4 +1,4 @@
-public class ASTRelOp implements ASTNode {
+public class ASTRelOp implements ASTNodeX {
 
     ASTNode lhs, rhs;
     int op;
@@ -24,15 +24,64 @@ public class ASTRelOp implements ASTNode {
                 return new LBool(v1i > v2i);
             case ParserConstants.RELGE:
                 return new LBool(v1i >= v2i);
-            default:
-                int x = 0/0; // lol
-                return null;
         }
 
+        assert(false);
+        return null;
     }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
+        lhs.compile(c, e);
+        rhs.compile(c, e);
+        c.emit("isub");
+        switch (op) {
+            case ParserConstants.RELEQ:
+                c.emit("ifeq L1");
+                break;
+            /* case  RELNEQ ... c.emit("ifne " + tl); */
+            case ParserConstants.RELL:
+                c.emit("iflt L1");
+                break;
+            case ParserConstants.RELLE:
+                c.emit("ifle L1");
+                break;
+            case ParserConstants.RELG:
+                c.emit("ifgt L1");
+                break;
+            case ParserConstants.RELGE:
+                c.emit("ifge L1");
+                break;
+        }
+        c.emit("sipush 0");
+        c.emit("goto L2");
+        c.emit("L1:");
+        c.emit("sipush 1");
+        c.emit("L2:");
+    }
 
+    public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
+        lhs.compile(c, e);
+        rhs.compile(c, e);
+        c.emit("isub");
+        switch (op) {
+            case ParserConstants.RELEQ:
+                c.emit("ifeq " + tl);
+                break;
+            /* case  RELNEQ ... c.emit("ifne " + tl); */
+            case ParserConstants.RELL:
+                c.emit("iflt " + tl);
+                break;
+            case ParserConstants.RELLE:
+                c.emit("ifle " + tl);
+                break;
+            case ParserConstants.RELG:
+                c.emit("ifgt " + tl);
+                break;
+            case ParserConstants.RELGE:
+                c.emit("ifge " + tl);
+                break;
+        }
+        c.emit("goto " + fl);
     }
 
     public ASTRelOp(ASTNode l, ASTNode r, int op)
@@ -56,9 +105,6 @@ public class ASTRelOp implements ASTNode {
             case ParserConstants.RELGE:
                 if (!(l instanceof LIntType && r instanceof LIntType)) throw new TypeError("Relational greater than/lesser than take two integers.");
                 break;
-            default:
-                int x = 0/0; // lol
-                return null;
         }
 
         return LBoolType.get();
