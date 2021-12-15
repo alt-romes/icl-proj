@@ -42,6 +42,8 @@ public class ASTWhile implements ASTNode {
 
         if (!(c instanceof LBoolType)) throw new TypeError("While condition must be a boolean.");
 
+        bod.typecheck(e);
+
         return LBoolType.get();
     }
 }

@@ -40,6 +40,7 @@ public class ASTId implements ASTNodeX {
 
     public LType typecheck(Environment<LType> e) {
         type = e.find(id);
+        assert(type!=null);
         return type;
     }
 }

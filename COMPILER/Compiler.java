@@ -20,12 +20,21 @@ public class Compiler {
         }
         catch (Exception e) { System.err.println(e); }
 
+        ASTNode ast = null;
         try {
 
-            ASTNode ast = Parser.Start();
+            ast = Parser.Start();
 
             if (ast == null)
                 System.exit(0);
+
+        } catch (Exception e) {
+            System.out.println ("Syntax Error?");
+            System.out.println(e);
+            Parser.ReInit(System.in);
+        }
+
+        try {
 
             ast.typecheck(new Environment<>());
 
@@ -51,9 +60,7 @@ public class Compiler {
         } catch (TypeError e) {
             System.out.println(e);
         } catch (Exception e) {
-            System.out.println ("Syntax Error!");
-            System.out.println (e);
-            Parser.ReInit(System.in);
+            e.printStackTrace();
         }
     }
 }
