@@ -14,13 +14,15 @@ public class ASTAssign implements ASTNode {
     }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
-        lhs.compile(c, e);
-        rhs.compile(c, e);
+        lhs.compile(c, e); // Reference
+        c.emit("dup");
+        rhs.compile(c, e); // Value
         c.emit("putfield %s/v %s", left_type.getJVMTypeName(), right_type.getJVMTypeName());
+        c.emit("getfield %s/v %s", left_type.getJVMTypeName(), right_type.getJVMTypeName());
+        // c.emit("swap"); // ... maybe with swap?
     }
 
-    public ASTAssign(ASTNode l, ASTNode r)
-    {
+    public ASTAssign(ASTNode l, ASTNode r) {
         lhs = l; rhs = r;
     }
 

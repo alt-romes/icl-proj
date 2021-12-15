@@ -13,7 +13,7 @@ public class ASTWhile implements ASTNode {
             c = cond.eval(e);
         }
 
-        return l;
+        return new LBool(false);
     }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
@@ -28,6 +28,7 @@ public class ASTWhile implements ASTNode {
         c.emit("pop");
         c.emit("goto " + l1);
         c.emit(l3  + ":");
+        c.emit("sipush 0"); // push false
     }
 
     public ASTWhile(ASTNode c, ASTNode b)
@@ -41,7 +42,7 @@ public class ASTWhile implements ASTNode {
 
         if (!(c instanceof LBoolType)) throw new TypeError("While condition must be a boolean.");
 
-        return bod.typecheck(e);
+        return LBoolType.get();
     }
 }
 

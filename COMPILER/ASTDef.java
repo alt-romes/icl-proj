@@ -81,8 +81,6 @@ public class ASTDef implements ASTNode {
 
     public LType typecheck(Environment<LType> e) throws TypeError {
 
-        // TODO: Que tipo de type annotations é para suportarmos?
-
         var scope_env = e.beginScope(); 
 
         for (var entry : associations.entrySet()) {

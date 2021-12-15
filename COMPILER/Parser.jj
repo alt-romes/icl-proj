@@ -12,6 +12,7 @@ SKIP :
     " "
     | "\t"
     | "\r"
+    | "\n"
 }
 
 TOKEN :
@@ -80,14 +81,14 @@ TOKEN :
     |
     < RPAR : ")" >
     |
-    < EL: "\n" >
+    < ENDPROGRAM: ";;" >
 
 }
 
 ASTNode Start():
 { ASTNode n; }
 {
-    ( n = Expression() <EL> { return n; } | <EOF> { return null; })
+    ( n = Expression() <ENDPROGRAM> { return n; } | <EOF> { return null; })
 }
 
 ASTNode Expression():

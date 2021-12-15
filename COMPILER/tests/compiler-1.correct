@@ -1,4 +1,4 @@
-java -jar jasmin.jar Main.j f1o.j
+java -jar jasmin.jar Main.j fZo.j
 .class public Main
 .super java/lang/Object
 
@@ -23,18 +23,18 @@ java -jar jasmin.jar Main.j f1o.j
 
     ; START
 
-new f1o
+new fZo
 dup
-invokespecial f1o/<init>()V
+invokespecial fZo/<init>()V
 dup
 aload 2
-putfield f1o/sl Ljava/lang/Object;
+putfield fZo/sl Ljava/lang/Object;
 astore 2
 aload 2
 sipush 1
-putfield f1o/s_0 I
+putfield fZo/s_0 Z
 aload 2
-getfield f1o/s_0 I
+getfield fZo/s_0 Z
 ifeq L5
 goto IfTL2
 L5:
@@ -54,14 +54,12 @@ L0:
 sipush 1
 L1:
 aload 2
-getfield f1o/sl Ljava/lang/Object;
+getfield fZo/sl Ljava/lang/Object;
 astore 2
     ; END
 
-    ; convert to String;
-    invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
+    ; Remove from stack expression value
+    pop
 
-    ; call println
-    invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
     return
 .end method

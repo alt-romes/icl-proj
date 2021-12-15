@@ -1,1 +1,1 @@
-def x = 0 in print !(new 2) end
+def x = 0 in print !(new 2) end;;

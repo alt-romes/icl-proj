@@ -1,1 +1,1 @@
-def x = new 5 in while !x > 0 do print !x; x := !x -1 end end
+def x = new 5 in while !x > 0 do print !x; x := !x -1 end end;;

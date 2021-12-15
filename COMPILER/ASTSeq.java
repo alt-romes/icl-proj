@@ -12,8 +12,8 @@ public class ASTSeq implements ASTNode {
     }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
-        // TODO
         lhs.compile(c, e);
+        c.emit("pop");
         rhs.compile(c, e);
     }
 
