@@ -18,7 +18,7 @@ public class ASTPrint implements ASTNode {
         c.emit("dup");
         c.emit("getstatic java/lang/System/out Ljava/io/PrintStream;");
         c.emit("swap");
-        c.emit("invokestatic java/lang/String/valueOf(%s)Ljava/lang/String;", x_type.getJVMTypeName());
+        c.emit("invokestatic java/lang/String/valueOf(%s)Ljava/lang/String;", x_type.getJVMFieldTypeName());
         c.emit("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
     }
 
