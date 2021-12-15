@@ -1,4 +1,4 @@
-public class ASTWhile implements ASTNode {
+public class ASTWhile implements ASTNodeX {
 
     ASTNode cond, bod;
 
@@ -16,7 +16,7 @@ public class ASTWhile implements ASTNode {
         return c;
     }
 
-    public void compile(CodeBlock c, Environment<int[]> e) {
+    private void compileCommon(CodeBlock c, Environment<int[]> e) {
         String l1 = "LWhileStart" + GlobalCounter.inc(),
                l2 = "LWhileTL"    + GlobalCounter.inc(),
                l3 = "LWhileFL"    + GlobalCounter.inc();
@@ -28,7 +28,16 @@ public class ASTWhile implements ASTNode {
         c.emit("pop");
         c.emit("goto " + l1);
         c.emit(l3  + ":");
-        c.emit("sipush 0"); // push false
+    }
+
+    public void compile(CodeBlock c, Environment<int[]> e) {
+        compileCommon(c, e);
+        new ASTBool(false).compile(c, e);
+    }
+
+    public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
+        compileCommon(c, e);
+        new ASTBool(false).compileShortCircuit(c, e, tl, fl);
     }
 
     public ASTWhile(ASTNode c, ASTNode b)

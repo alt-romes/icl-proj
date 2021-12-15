@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class ASTDef implements ASTNode {
+public class ASTDef implements ASTNodeX {
 
     Map<String, ASTNode> associations;
     List<LType> associationsTypes = new ArrayList<>();
@@ -21,6 +21,35 @@ public class ASTDef implements ASTNode {
     }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
+        var scope_env = compileCommon(c, e);
+
+        ef.compile(c, scope_env);
+        
+        // Frame pop off
+        c.emit(CodeBlock.LOAD_SL);
+        c.emit("getfield %s/sl L%s;", scope_env.frame.type, e.frame.type);
+        c.emit(CodeBlock.STORE_SL);
+
+        e = scope_env.endScope(); // still useless
+
+    }
+
+    public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
+
+        var scope_env = compileCommon(c, e);
+
+        ((ASTNodeX)ef).compileShortCircuit(c, scope_env, tl, fl);
+        
+        // Frame pop off
+        c.emit(CodeBlock.LOAD_SL);
+        c.emit("getfield %s/sl L%s;", scope_env.frame.type, e.frame.type);
+        c.emit(CodeBlock.STORE_SL);
+
+        e = scope_env.endScope(); // still useless
+
+    }
+
+    private Environment<int[]> compileCommon(CodeBlock c, Environment<int[]> e) {
 
         var scope_env = e.beginScope();
 
@@ -61,15 +90,8 @@ public class ASTDef implements ASTNode {
         // must have been created
         assert scope_env.associations.size() > 0;
 
-        ef.compile(c, scope_env);
-
-        
-        // Frame pop off
-        c.emit(CodeBlock.LOAD_SL);
-        c.emit("getfield %s/sl L%s;", scope_env.frame.type, e.frame.type);
-        c.emit(CodeBlock.STORE_SL);
-
-        e = scope_env.endScope(); // still useless
+        // This method must be continued by the compile fucntion extending it (compile or compileShortCircuit)
+        return scope_env;
 
     }
 
