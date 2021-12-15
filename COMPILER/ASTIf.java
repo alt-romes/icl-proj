@@ -1,4 +1,4 @@
-public class ASTIf implements ASTNode {
+public class ASTIf implements ASTNodeX {
 
     ASTNode cond, lhs, rhs;
 
@@ -27,6 +27,22 @@ public class ASTIf implements ASTNode {
         c.emit(l3 + ":");
     }
 
+    // TODO: Not this repeated code?
+    @Override
+    public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
+        String l1 = "IfTL" + GlobalCounter.inc(),
+                l2 = "IfFL" + GlobalCounter.inc(),
+                l3 = "IfEX" + GlobalCounter.inc();
+        // Cast guaranteed by type system
+        ((ASTNodeX)cond).compileShortCircuit(c, e, l1, l2);
+        c.emit(l1 + ":");
+        ((ASTNodeX)lhs).compileShortCircuit(c, e, tl, fl);
+        c.emit("goto " + l3);
+        c.emit(l2 + ":");
+        ((ASTNodeX)rhs).compileShortCircuit(c, e, tl, fl);
+        c.emit(l3 + ":");
+    }
+
     public ASTIf(ASTNode c, ASTNode l, ASTNode r) {
         cond = c; lhs = l; rhs = r;
     }
@@ -43,5 +59,6 @@ public class ASTIf implements ASTNode {
 
         return l;
     }
+
 }
 
