@@ -1,4 +1,4 @@
-java -jar jasmin.jar Main.j fref_of_Io.j ref_of_I.j
+java -jar jasmin.jar Main.j fIo.j
 .class public Main
 .super java/lang/Object
 
@@ -20,33 +20,25 @@ java -jar jasmin.jar Main.j fref_of_Io.j ref_of_I.j
 
     ; START
 
-new fref_of_Io
+new fIo
 dup
-invokespecial fref_of_Io/<init>()V
+invokespecial fIo/<init>()V
 dup
 aload 2
-putfield fref_of_Io/sl Ljava/lang/Object;
+putfield fIo/sl Ljava/lang/Object;
 astore 2
 aload 2
-new ref_of_I
-dup
-invokespecial ref_of_I/<init>()V
-dup
 sipush 1
-putfield ref_of_I/v I
-putfield fref_of_Io/s_0 Lref_of_I;
+putfield fIo/s_0 I
 aload 2
-getfield fref_of_Io/s_0 Lref_of_I;
+getfield fIo/s_0 I
 dup
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
+invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
 aload 2
-getfield fref_of_Io/s_0 Lref_of_I;
-getfield ref_of_I/v I
-sipush 1
-iadd
-putfield ref_of_I/v I
-getfield ref_of_I/v I
-aload 2
-getfield fref_of_Io/sl Ljava/lang/Object;
+getfield fIo/sl Ljava/lang/Object;
 astore 2
     ; END
 

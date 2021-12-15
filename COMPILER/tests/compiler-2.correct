@@ -32,9 +32,29 @@ new ref_of_I
 dup
 invokespecial ref_of_I/<init>()V
 dup
-sipush 1
+sipush 5
 putfield ref_of_I/v I
 putfield fref_of_Io/s_0 Lref_of_I;
+aload 2
+getfield fref_of_Io/s_0 Lref_of_I;
+getfield ref_of_I/v I
+sipush 0
+isub
+ifgt IfTL0
+goto IfFL1
+IfTL0:
+aload 2
+getfield fref_of_Io/s_0 Lref_of_I;
+dup
+aload 2
+getfield fref_of_Io/s_0 Lref_of_I;
+getfield ref_of_I/v I
+sipush 1
+isub
+putfield ref_of_I/v I
+getfield ref_of_I/v I
+goto IfEX2
+IfFL1:
 aload 2
 getfield fref_of_Io/s_0 Lref_of_I;
 dup
@@ -45,6 +65,16 @@ sipush 1
 iadd
 putfield ref_of_I/v I
 getfield ref_of_I/v I
+IfEX2:
+pop
+aload 2
+getfield fref_of_Io/s_0 Lref_of_I;
+getfield ref_of_I/v I
+dup
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
+invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
 aload 2
 getfield fref_of_Io/sl Ljava/lang/Object;
 astore 2
