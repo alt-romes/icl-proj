@@ -14,9 +14,6 @@ java -jar jasmin.jar Main.j fZo.j
     .limit locals 10
     .limit stack 256
 
-    ; 1 - the PrintStream object held in java.lang.System.out
-    getstatic java/lang/System/out Ljava/io/PrintStream;
-
     ; Move null to local main variable
     aconst_null
     astore 2

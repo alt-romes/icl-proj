@@ -13,7 +13,7 @@ public class ASTWhile implements ASTNode {
             c = cond.eval(e);
         }
 
-        return new LBool(false);
+        return c;
     }
 
     public void compile(CodeBlock c, Environment<int[]> e) {
