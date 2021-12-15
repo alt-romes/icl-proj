@@ -16,7 +16,7 @@ public class ASTAssign implements ASTNode {
     public void compile(CodeBlock c, Environment<int[]> e) {
         lhs.compile(c, e);
         rhs.compile(c, e);
-        c.emit("putfield %s/v %s", left_type, right_type);
+        c.emit("putfield %s/v %s", left_type.getJVMTypeName(), right_type.getJVMTypeName());
     }
 
     public ASTAssign(ASTNode l, ASTNode r)

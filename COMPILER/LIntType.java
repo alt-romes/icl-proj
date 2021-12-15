@@ -23,5 +23,10 @@ public class LIntType implements LType {
     public String getJVMTypeName() {
         return "I";
     }
+
+    @Override
+    public String getJVMFieldTypeName() {
+        return getJVMTypeName();
+    }
 }
 

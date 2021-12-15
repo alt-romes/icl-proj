@@ -14,7 +14,7 @@ public class ASTDeref implements ASTNode {
     
     public void compile(CodeBlock c, Environment<int[]> e) {
         x.compile(c, e);
-        c.emit("getfield %s/v %s", x_type, self_type);
+        c.emit("getfield %s/v %s", x_type.getJVMTypeName(), self_type.getJVMTypeName());
     }
 
     public ASTDeref(ASTNode x)

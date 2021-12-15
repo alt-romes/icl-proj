@@ -5,7 +5,7 @@ public class Frame {
     public String parent_type;
     public String type;
 
-    int size = 0;
+    List<LType> typelist;
 
     Frame() {
         // The global environment has an empty frame of type Object,
@@ -14,14 +14,18 @@ public class Frame {
         type = "java/lang/Object";
     }
 
-    Frame(int size, String parent_type) {
-        this.size = size; 
+    Frame(List<LType> typelist, String parent_type) {
+        this.typelist = typelist;
         this.parent_type = parent_type;
-        this.type = Frame.getFrameTypeName(size, parent_type);
+        this.type = Frame.getFrameTypeName(typelist, parent_type);
     }
 
-    static String getFrameTypeName(int size, String parent_type) {
-        return "f" + size + (parent_type == "java/lang/Object" ? "o" : parent_type);
+    static String getFrameTypeName(List<LType> typelist, String parent_type) {
+        StringBuilder res = new StringBuilder("f");
+        for (var t : typelist)
+            res.append(t.getJVMTypeName());
+        res.append(parent_type.equals("java/lang/Object") ? "o" : parent_type);
+        return res.toString();
     }
 
     void dump() {
@@ -32,8 +36,9 @@ public class Frame {
             fw.write(".super java/lang/Object\n");
             fw.write(".field public sl L" + parent_type + ";\n");
 
-            for (int i=0; i<size; i++) {
-                fw.write(".field public s_" + i + " I\n");
+            int i = 0;
+            for (var t : typelist) {
+                fw.write(".field public s_" + i + " " + t.getJVMFieldTypeName() + "\n");
             }
 
             fw.write(".method public <init>()V\n");

@@ -5,4 +5,6 @@ interface LType {
     boolean equals(LType o);
 
     String getJVMTypeName();
+
+    String getJVMFieldTypeName();
 }

@@ -2,7 +2,8 @@ import java.util.*;
 
 public class ASTDef implements ASTNode {
 
-    Map<String, ASTNode> associations = new HashMap<>();
+    Map<String, ASTNode> associations;
+    List<LType> associationsTypes = new ArrayList<>();
     ASTNode ef;
 
     public LValue eval(Environment<LValue> e) {
@@ -23,7 +24,7 @@ public class ASTDef implements ASTNode {
 
         var scope_env = e.beginScope();
 
-        Frame frame = c.addFrameType(associations.size(), scope_env);
+        Frame frame = c.addFrameType(associationsTypes, scope_env);
         scope_env.assocFrameType(frame);
 
 
@@ -50,7 +51,7 @@ public class ASTDef implements ASTNode {
         for (var pair : associations.entrySet()) {
             c.emit(CodeBlock.LOAD_SL);
             pair.getValue().compile(c, scope_env);
-            c.emit("putfield %s/s_%d I", scope_env.frame.type, i);
+            c.emit("putfield %s/s_%d %s", scope_env.frame.type, i, associationsTypes.get(i).getJVMFieldTypeName());
             scope_env.assoc(pair.getKey(), new int[]{scope_env.depth, i});
             i++;
         }
@@ -84,8 +85,11 @@ public class ASTDef implements ASTNode {
 
         var scope_env = e.beginScope(); 
 
-        for (var entry : associations.entrySet())
-            scope_env.assoc(entry.getKey(), entry.getValue().typecheck(scope_env));
+        for (var entry : associations.entrySet()) {
+            LType entryType = entry.getValue().typecheck(scope_env);
+            scope_env.assoc(entry.getKey(), entryType);
+            associationsTypes.add(entryType);
+        }
 
         LType eft = ef.typecheck(scope_env);
 

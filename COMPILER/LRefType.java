@@ -18,7 +18,7 @@ public class LRefType implements LType {
 
     @Override
     public String getJVMTypeName() {
-        return "ref_of_" + valType.getJVMTypeName();
+        return "ref_of_" + getJVMInnerValueTypeName();
     }
 
     public void dump() {
@@ -28,7 +28,11 @@ public class LRefType implements LType {
 
             fw.write(".class " + getJVMTypeName() + "\n");
             fw.write(".super java/lang/Object\n");
-            fw.write(".field public v " + (getJVMInnerValueTypeName().startsWith("ref_of") ? "L" + getJVMInnerValueTypeName() : getJVMInnerValueTypeName()) + ";\n");
+            fw.write(".field public v " + valType.getJVMFieldTypeName() + "\n");
+            fw.write(".method public <init>()V\n");
+            fw.write("aload_0\n");
+            fw.write("invokenonvirtual java/lang/Object/<init>()V\n");
+            fw.write("return\n");
             fw.write(".end method\n");
 
             fw.close();
@@ -36,6 +40,11 @@ public class LRefType implements LType {
         catch(IOException e) {
             System.err.println(e);
         }
+    }
+
+    public String getJVMFieldTypeName() {
+
+        return "L" + getJVMTypeName() + ";";
     }
 
     public String getJVMInnerValueTypeName() {

@@ -1,6 +1,7 @@
 public class ASTId implements ASTNodeX {
 
     String id;
+    LType type;
 
     public LValue eval(Environment<LValue> e) { 
         return e.find(id); 
@@ -19,7 +20,7 @@ public class ASTId implements ASTNodeX {
             e = e.parent;
         }
     
-        c.emit("getfield %s/s_%d I", e.frame.type, coords[1]);
+        c.emit("getfield %s/s_%d %s", e.frame.type, coords[1], type.getJVMFieldTypeName());
     }
 
     public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
@@ -38,7 +39,8 @@ public class ASTId implements ASTNodeX {
     }
 
     public LType typecheck(Environment<LType> e) {
-        return e.find(id);
+        type = e.find(id);
+        return type;
     }
 }
 

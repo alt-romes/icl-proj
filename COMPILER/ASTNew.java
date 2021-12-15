@@ -16,7 +16,7 @@ public class ASTNew implements ASTNode {
         c.emit("invokespecial %s/<init>()V", self_type.getJVMTypeName());
         c.emit("dup");
         x.compile(c, e);
-        c.emit("putfield %s/v %s", ((LRefType)self_type).getJVMInnerValueTypeName());
+        c.emit("putfield %s/v %s", self_type.getJVMTypeName(), ((LRefType)self_type).getJVMInnerValueTypeName());
     }
 
     public ASTNew(ASTNode x)
