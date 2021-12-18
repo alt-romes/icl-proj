@@ -1,12 +1,35 @@
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 module Parser where
 
-import Syntax
+import qualified Syntax as S
 import System.IO
 import Control.Monad
 import Text.ParserCombinators.Parsec
 import Text.ParserCombinators.Parsec.Expr
 import Text.ParserCombinators.Parsec.Language
 import qualified Text.ParserCombinators.Parsec.Token as Token
+import Data.Bifunctor
+
+data ParseExpr
+    = LitNum Integer
+    | LitBool Bool
+    | Id String
+    | Add ParseExpr ParseExpr
+    | Mul ParseExpr ParseExpr
+    | UMinus ParseExpr
+    | LogNeg ParseExpr
+    | RelEq ParseExpr ParseExpr
+    | LogOr ParseExpr ParseExpr
+    | LogAnd ParseExpr ParseExpr
+    | Def [(String, ParseExpr)] ParseExpr
+    | New ParseExpr
+    | If ParseExpr ParseExpr ParseExpr
+    | While ParseExpr ParseExpr
+    | Print ParseExpr
+    | Seq ParseExpr ParseExpr
+    | Assign ParseExpr ParseExpr
+    | Deref ParseExpr
 
 languageDef =
     emptyDef { Token.commentStart    = "/*"
@@ -45,80 +68,97 @@ semi       = Token.semi       lexer -- parses a semicolon
 whiteSpace = Token.whiteSpace lexer -- parses whitespace
 
 
-newtype ParseExpr = PE (Expr a)
-                 deriving (Show)
-
-operators :: [[Operator Char st (ParseExpr a)]]
+operators :: [[Operator Char st ParseExpr]]
 operators = [
-        [Prefix (reservedOp "-" >> return (\(PE x) -> PE $ UMinus x)),
-         Prefix (reservedOp "~" >> return (\(PE x) -> PE $ LogNeg x)),
-         Prefix (reservedOp "new" >> return (\(PE x) -> PE $ New x)),
-         Prefix (reservedOp "print" >> return (\(PE x) -> PE $ Print x)),
-         Prefix (reservedOp "!" >> return (\(PE x) -> PE $ Deref x))
+        [Prefix (reservedOp "-" >> return UMinus),
+         Prefix (reservedOp "~" >> return LogNeg),
+         Prefix (reservedOp "new" >> return New),
+         Prefix (reservedOp "print" >> return Print),
+         Prefix (reservedOp "!" >> return Deref)
         ],
 
-        [Infix  (reservedOp "*"   >> return (\(PE x) (PE y) -> PE $ Mul x y)) AssocLeft],
+        [Infix  (reservedOp "*"   >> return Mul) AssocLeft],
 
-        [Infix  (reservedOp "+"   >> return (\(PE x) (PE y) -> PE $ Add x y)) AssocLeft],
+        [Infix  (reservedOp "+"   >> return Add) AssocLeft],
 
-        [Infix  (reservedOp "=="   >> return (\(PE x) (PE y) -> PE $ RelEq x y)) AssocLeft],
+        [Infix  (reservedOp "=="   >> return RelEq) AssocLeft],
 
-        [Infix  (reservedOp "&&"   >> return (\(PE x) (PE y) -> PE $ LogAnd x y)) AssocLeft],
+        [Infix  (reservedOp "&&"   >> return LogAnd) AssocLeft],
 
-        [Infix  (reservedOp "||"   >> return (\(PE x) (PE y) -> PE $ LogOr x y)) AssocLeft],
+        [Infix  (reservedOp "||"   >> return LogOr) AssocLeft],
 
-        [Infix  (reservedOp ":="   >> return (\(PE x) (PE y) -> PE $ Assign x y)) AssocLeft],
+        [Infix  (reservedOp ":="   >> return Assign) AssocLeft],
 
-        [Infix  (reservedOp ";"   >> return (\(PE x) (PE y) -> PE $ Seq x y)) AssocLeft]
+        [Infix  (reservedOp ";"   >> return Seq) AssocLeft]
     ]
 
-parseExpr :: Parser (ParseExpr a)
+parseExpr :: Parser ParseExpr
 parseExpr = whiteSpace >> expression
 
-expression :: Parser (ParseExpr a)
+expression :: Parser ParseExpr
 expression = buildExpressionParser operators primaryExpr
 
-primaryExpr :: Parser (ParseExpr a)
+primaryExpr :: Parser ParseExpr
 primaryExpr = parens expression
-            <|> PE . Id <$> identifier
-            <|> PE . LitNum <$> integer
-            <|> (reserved "true" >> return (PE $ LitBool True))
-            <|> (reserved "false" >> return (PE $ LitBool False))
+            <|> Id <$> identifier
+            <|> LitNum <$> integer
+            <|> (reserved "true" >> return (LitBool True))
+            <|> (reserved "false" >> return (LitBool False))
             <|> definitionExpr
             <|> selectionExpr
             <|> iterationExpr
 
-definitionExpr :: Parser (ParseExpr a)
+definitionExpr :: Parser ParseExpr
 definitionExpr = do
     reserved "def"
     la <- many1 (do
             x <- identifier
             reservedOp "="
-            PE y <- expression
+            y <- expression
             return (x, y)
         )
     reserved "in"
-    PE b <- expression
+    b <- expression
     reserved "end"
-    return $ PE $ Def la b
+    return $ Def la b
 
-selectionExpr :: Parser (ParseExpr a)
+selectionExpr :: Parser ParseExpr
 selectionExpr = do
     reserved "if"
-    PE cond <- expression
+    cond <- expression
     reserved "then"
-    PE a <- expression
+    a <- expression
     reserved "else"
-    PE b <- expression
+    b <- expression
     reserved "end"
-    return $ PE $ If cond a b
+    return $ If cond a b
 
-iterationExpr :: Parser (ParseExpr a)
+iterationExpr :: Parser ParseExpr
 iterationExpr = do
     reserved "while"
-    PE cond <- expression
+    cond <- expression
     reserved "do"
-    PE bod <- expression
+    bod <- expression
     reserved "end"
-    return $ PE $ While cond bod
+    return $ While cond bod
 
+
+toSyntax :: ParseExpr -> S.Expr a
+toSyntax ( LitNum a ) = S.LitNum a
+toSyntax ( LitBool a ) = S.LitBool a
+toSyntax ( Id a ) = S.Id a
+toSyntax ( Add a b ) = S.Add (toSyntax a) (toSyntax b)
+toSyntax ( Mul a b ) = S.Mul (toSyntax a) (toSyntax b) 
+toSyntax ( UMinus a ) = S.UMinus (toSyntax a)
+toSyntax ( LogNeg a ) = S.LogNeg (toSyntax a)
+toSyntax ( RelEq a b ) = S.RelEq (toSyntax a) (toSyntax b)
+toSyntax ( LogOr a b ) = S.LogOr (toSyntax a) (toSyntax b)
+toSyntax ( LogAnd a b ) = S.LogAnd (toSyntax a) (toSyntax b)
+toSyntax ( Def l a ) = S.Def (map (second toSyntax) l) (toSyntax a)
+toSyntax ( New a ) = S.New (toSyntax a)
+toSyntax ( If a b c ) = S.If (toSyntax a) (toSyntax b) (toSyntax c)
+toSyntax ( While a b ) = S.While (toSyntax a) (toSyntax b)
+toSyntax ( Print a ) = S.Print (toSyntax a)
+toSyntax ( Seq a b ) = S.Seq (toSyntax a) (toSyntax b)
+toSyntax ( Assign a b ) = S.Assign (toSyntax a) (toSyntax b)
+toSyntax ( Deref a ) = S.Deref (toSyntax a)
