@@ -26,7 +26,7 @@ languageDef =
                                        , "in"
                                        ]
              , Token.reservedOpNames = ["+", "-", "*", "/", ":="
-                                       , "==", ">", "&&", "||", "~", "!"
+                                       , "==", ">", "&&", "||", "~", "!", "new", "print"
                                        ]
              }
 
@@ -44,104 +44,81 @@ integer    = Token.integer    lexer -- parses an integer
 semi       = Token.semi       lexer -- parses a semicolon
 whiteSpace = Token.whiteSpace lexer -- parses whitespace
 
--- Would be simpler to use an expressions parser built in to parsec but...
 
-data ParseExpr a = EB (Expr Bool)
-                 | ER (Expr (Ref a))
-                 | EI (Expr Int)
-                 | EA (Expr a)
+newtype ParseExpr = PE (Expr a)
+                 deriving (Show)
+
+operators :: [[Operator Char st (ParseExpr a)]]
+operators = [
+        [Prefix (reservedOp "-" >> return (\(PE x) -> PE $ UMinus x)),
+         Prefix (reservedOp "~" >> return (\(PE x) -> PE $ LogNeg x)),
+         Prefix (reservedOp "new" >> return (\(PE x) -> PE $ New x)),
+         Prefix (reservedOp "print" >> return (\(PE x) -> PE $ Print x)),
+         Prefix (reservedOp "!" >> return (\(PE x) -> PE $ Deref x))
+        ],
+
+        [Infix  (reservedOp "*"   >> return (\(PE x) (PE y) -> PE $ Mul x y)) AssocLeft],
+
+        [Infix  (reservedOp "+"   >> return (\(PE x) (PE y) -> PE $ Add x y)) AssocLeft],
+
+        [Infix  (reservedOp "=="   >> return (\(PE x) (PE y) -> PE $ RelEq x y)) AssocLeft],
+
+        [Infix  (reservedOp "&&"   >> return (\(PE x) (PE y) -> PE $ LogAnd x y)) AssocLeft],
+
+        [Infix  (reservedOp "||"   >> return (\(PE x) (PE y) -> PE $ LogOr x y)) AssocLeft],
+
+        [Infix  (reservedOp ":="   >> return (\(PE x) (PE y) -> PE $ Assign x y)) AssocLeft],
+
+        [Infix  (reservedOp ";"   >> return (\(PE x) (PE y) -> PE $ Seq x y)) AssocLeft]
+    ]
 
 parseExpr :: Parser (ParseExpr a)
 parseExpr = whiteSpace >> expression
 
 expression :: Parser (ParseExpr a)
-expression = sequenceExpr
-
-sequenceExpr :: Parser (ParseExpr a)
-sequenceExpr = (do
-    EA a <- assignmentExpr
-    semi
-    EA b <- assignmentExpr
-    return $ EA (Seq a b)) <|> assignmentExpr
-
-assignmentExpr :: Parser (ParseExpr a)
-assignmentExpr = (do
-    ER a <- logicalOrExpr
-    reservedOp ":="
-    EA b <- logicalOrExpr
-    return $ EA (Assign a b)) <|> logicalOrExpr
-
-logicalOrExpr :: Parser (ParseExpr a)
-logicalOrExpr = (do
-    EB a <- logicalAndExpr
-    reservedOp "||"
-    EB b <- logicalAndExpr
-    return $ EB (LogOr a b)) <|> logicalAndExpr
-
-logicalAndExpr :: Parser (ParseExpr a)
-logicalAndExpr = (do
-    EB a <- relationalExpr
-    reservedOp "&&"
-    EB b <- relationalExpr
-    return $ EB (LogAnd a b)) <|> relationalExpr
-
-relationalExpr :: Parser (ParseExpr a)
-relationalExpr = (do
-    EA a <- additiveExpr
-    reservedOp "=="
-    EA b <- additiveExpr
-    return $ EB (RelEq a b)) <|> additiveExpr
-
-additiveExpr :: Parser (ParseExpr a)
-additiveExpr = (do
-    EI a <- multiplicativeExpr
-    reservedOp "+"
-    EI b <- multiplicativeExpr
-    return $ EI (Add a b)) <|> multiplicativeExpr
-
-multiplicativeExpr :: Parser (ParseExpr a)
-multiplicativeExpr = (do
-    EI a <- unaryExpr
-    reservedOp "*"
-    EI b <- unaryExpr
-    return $ EI (Mul a b)) <|> unaryExpr
-
-unaryExpr :: Parser (ParseExpr a)
-unaryExpr = (do
-    reservedOp "-"
-    EI a <- primaryExpr
-    return $ EI (UMinus a))
-    <|>
-    (do
-    reservedOp "~"
-    EB a <- primaryExpr
-    return $ EB (LogNeg a))
-    <|>
-    (do
-    reservedOp "new"
-    EA a <- primaryExpr
-    return $ ER (New a))
-    <|>
-    (do
-    reservedOp "print"
-    EA a <- primaryExpr
-    return $ ER (New a))
-    <|>
-    (do
-    reservedOp "print"
-    EA a <- primaryExpr
-    return $ ER (New a))
-    <|>
-    (do
-    reservedOp "!"
-    ER a <- primaryExpr
-    return $ EA (Deref a))
-    <|>
-    definitionExpr
-    <|>
-    selectionExpr
-    <|>
-    iterationExpr
+expression = buildExpressionParser operators primaryExpr
 
 primaryExpr :: Parser (ParseExpr a)
-primaryExpr = ...
+primaryExpr = parens expression
+            <|> PE . Id <$> identifier
+            <|> PE . LitNum <$> integer
+            <|> (reserved "true" >> return (PE $ LitBool True))
+            <|> (reserved "false" >> return (PE $ LitBool False))
+            <|> definitionExpr
+            <|> selectionExpr
+            <|> iterationExpr
+
+definitionExpr :: Parser (ParseExpr a)
+definitionExpr = do
+    reserved "def"
+    la <- many1 (do
+            x <- identifier
+            reservedOp "="
+            PE y <- expression
+            return (x, y)
+        )
+    reserved "in"
+    PE b <- expression
+    reserved "end"
+    return $ PE $ Def la b
+
+selectionExpr :: Parser (ParseExpr a)
+selectionExpr = do
+    reserved "if"
+    PE cond <- expression
+    reserved "then"
+    PE a <- expression
+    reserved "else"
+    PE b <- expression
+    reserved "end"
+    return $ PE $ If cond a b
+
+iterationExpr :: Parser (ParseExpr a)
+iterationExpr = do
+    reserved "while"
+    PE cond <- expression
+    reserved "do"
+    PE bod <- expression
+    reserved "end"
+    return $ PE $ While cond bod
+
