@@ -25,12 +25,9 @@ public class ASTId implements ASTNodeX {
 
     public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
 
-        String l1 = "L" + GlobalCounter.inc();
         compile(c, e); // Put bool value on top of stack
-        c.emit("ifeq " + l1); // If false
+        c.emit("ifeq " + fl); // If false
         c.emit("goto " + tl); // Else jump to true
-        c.emit(l1 + ":"); // Jump to false
-        c.emit("goto " + fl);
     }
 
     public ASTId(String id)

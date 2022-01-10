@@ -38,7 +38,7 @@ public class Frame {
 
             int i = 0;
             for (var t : typelist) {
-                fw.write(".field public s_" + i + " " + t.getJVMFieldTypeName() + "\n");
+                fw.write(".field public s_" + i++ + " " + t.getJVMFieldTypeName() + "\n");
             }
 
             fw.write(".method public <init>()V\n");

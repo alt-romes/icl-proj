@@ -1,4 +1,4 @@
-public class ASTSeq implements ASTNode {
+public class ASTSeq implements ASTNodeX {
 
     ASTNode lhs, rhs;
 
@@ -15,6 +15,12 @@ public class ASTSeq implements ASTNode {
         lhs.compile(c, e);
         c.emit("pop");
         rhs.compile(c, e);
+    }
+
+    public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
+        compile(c, e);
+        c.emit("ifeq %s", fl);
+        c.emit("goto %s", tl);
     }
 
     public ASTSeq(ASTNode l, ASTNode r)

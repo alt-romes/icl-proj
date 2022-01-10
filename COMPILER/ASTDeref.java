@@ -1,4 +1,4 @@
-public class ASTDeref implements ASTNode {
+public class ASTDeref implements ASTNodeX {
 
     ASTNode x;
 
@@ -15,6 +15,13 @@ public class ASTDeref implements ASTNode {
     public void compile(CodeBlock c, Environment<int[]> e) {
         x.compile(c, e);
         c.emit("getfield %s/v %s", x_type.getJVMTypeName(), self_type.getJVMTypeName());
+    }
+
+    public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
+
+        compile(c, e);
+        c.emit("ifeq %s", fl);
+        c.emit("goto %s", tl);
     }
 
     public ASTDeref(ASTNode x)

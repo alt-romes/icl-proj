@@ -1,4 +1,4 @@
-public class ASTAssign implements ASTNode {
+public class ASTAssign implements ASTNodeX {
 
     ASTNode lhs, rhs;
 
@@ -20,6 +20,12 @@ public class ASTAssign implements ASTNode {
         c.emit("putfield %s/v %s", left_type.getJVMTypeName(), right_type.getJVMTypeName());
         c.emit("getfield %s/v %s", left_type.getJVMTypeName(), right_type.getJVMTypeName());
         // c.emit("swap"); // ... maybe with swap?
+    }
+
+    public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
+        compile(c, e);
+        c.emit("ifeq %s", fl);
+        c.emit("goto %s", tl);
     }
 
     public ASTAssign(ASTNode l, ASTNode r) {
