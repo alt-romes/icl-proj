@@ -1,27 +1,70 @@
-{-# LANGUAGE GADTs, StandaloneDeriving #-}
+{-# LANGUAGE GADTs, StandaloneDeriving, FlexibleInstances #-}
 module Syntax where 
 
-data Expr a where
-    LitNum :: Integer -> Expr Int
-    LitBool :: Bool -> Expr Bool
-    Id :: String -> Expr a
-    Add :: Expr Int -> Expr Int -> Expr Int
-    Mul :: Expr Int -> Expr Int -> Expr Int
-    UMinus :: Expr Int -> Expr Int
-    RelEq :: Expr a -> Expr a -> Expr Bool
-    LogOr :: Expr Bool -> Expr Bool -> Expr Bool
-    LogAnd :: Expr Bool -> Expr Bool -> Expr Bool
-    LogNeg :: Expr Bool -> Expr Bool
-    Def :: [(String, Expr a)] -> Expr a -> Expr a
-    New :: Expr a -> Expr (Ref a)
-    If :: Expr Bool -> Expr a -> Expr a -> Expr a
-    While :: Expr Bool -> Expr a -> Expr Bool
-    Print :: Expr a -> Expr a
-    Seq :: Expr a -> Expr b -> Expr b
-    Assign :: Expr (Ref a) -> Expr b -> Expr b
-    Deref :: Expr (Ref a) -> Expr a
+import Prelude hiding ((&&), (||), not, (==), (/=))
+import qualified Prelude
 
-deriving instance Show (Expr a)
+data TExpr a where
+    TLitNum :: Integer -> TExpr Int
+    TLitBool :: Bool -> TExpr Bool
+    TId :: String -> TExpr String
+    TAdd :: TExpr Int -> TExpr Int -> TExpr Int
+    TMul :: TExpr Int -> TExpr Int -> TExpr Int
+    TUMinus :: TExpr Int -> TExpr Int
+    TRelEq :: Eq a => TExpr a -> TExpr a -> TExpr Bool
+    TLogOr :: TExpr Bool -> TExpr Bool -> TExpr Bool
+    TLogAnd :: TExpr Bool -> TExpr Bool -> TExpr Bool
+    TLogNeg :: TExpr Bool -> TExpr Bool
+    TDef :: [(String, ATExpr)] -> TExpr b -> TExpr b
+    TNew :: TExpr a -> TExpr (Ref a)
+    TIf :: TExpr Bool -> TExpr a -> TExpr a -> TExpr a
+    TWhile :: TExpr Bool -> TExpr a -> TExpr Bool
+    TPrint :: TExpr a -> TExpr a
+    TSeq :: TExpr a -> TExpr b -> TExpr b
+    TAssign :: TExpr (Ref a) -> TExpr b -> TExpr b
+    TDeref :: TExpr (Ref a) -> TExpr a
+deriving instance Show (TExpr a)
 
-data Ref a = Re deriving (Show)
+data TType a where
+    TTBool :: TType Bool
+    TTInt  :: TType Int
+    TTRef  :: TType a -> TType (Ref a)
+deriving instance Show (TType a)
 
+data TValue a where
+    TVBool :: Bool -> TValue Bool
+    TVInt :: Int -> TValue Int
+    TVRef :: TValue a -> TValue (Ref a)
+deriving instance Show (TValue a)
+
+newtype Ref a = Ref a deriving (Show, Eq)
+
+data ATExpr = forall a. TExpr a ::: TType a
+deriving instance Show ATExpr
+
+data ATValue = forall a. V (TValue a)
+
+instance Num ATValue where
+    (V (TVInt a)) + (V (TVInt b)) = V $ TVInt $ a + b
+    (V (TVInt a)) * (V (TVInt b)) = V $ TVInt $ a * b
+    (V (TVInt a)) - (V (TVInt b)) = V $ TVInt $ a - b
+    abs (V (TVInt a)) = V $ TVInt (abs a)
+    signum (V (TVInt a)) = V $ TVInt (signum a)
+    fromInteger a = V $ TVInt (fromInteger a)
+
+class Boolean a where
+    (&&) :: a -> a -> a
+    (||) :: a -> a -> a
+    not  :: a -> a
+infixr 3 &&
+infixr 2 ||
+
+instance Boolean Bool where
+    (&&) = (Prelude.&&)
+    (||) = (Prelude.||)
+    not = Prelude.not
+
+instance Boolean ATValue where
+    (V (TVBool a)) && (V (TVBool b)) = V $ TVBool $ a && b
+    (V (TVBool a)) || (V (TVBool b)) = V $ TVBool $ a || b
+    not (V (TVBool a)) = V $ TVBool $ not a

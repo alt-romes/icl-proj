@@ -1,4 +1,4 @@
-public class ASTNew implements ASTNode {
+public class ASTNew extends AbstractASTNode implements ASTNode {
 
     ASTNode x;
 
@@ -27,6 +27,12 @@ public class ASTNew implements ASTNode {
     public LType typecheck(Environment<LType> e) throws TypeError {
 
         self_type = new LRefType(x.typecheck(e));
+
+        if (nodeType == null || nodeType.equals(self_type))
+            nodeType = self_type;
+        else
+            throw new TypeError("Declared type and expression type differ!");
+
         return self_type;
     }
 }

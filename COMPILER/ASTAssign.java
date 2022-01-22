@@ -1,4 +1,4 @@
-public class ASTAssign implements ASTNodeX {
+public class ASTAssign extends AbstractASTNode implements ASTNodeX {
 
     ASTNode lhs, rhs;
 
@@ -41,7 +41,12 @@ public class ASTAssign implements ASTNodeX {
         if (!(r.equals(((LRefType)l).getInnerType()))) throw new TypeError("Right side of := operator must match inner type of left operand reference.");
         right_type = r;
 
-        return r;
+        if (nodeType == null || nodeType.equals(r))
+            nodeType = r;
+        else
+            throw new TypeError("Declared type and expression type differ!");
+
+        return nodeType;
     }
 }
 

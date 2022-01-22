@@ -1,4 +1,4 @@
-public class ASTBNeg implements ASTNodeX {
+public class ASTBNeg extends AbstractASTNode implements ASTNodeX {
 
     ASTNode x;
 
@@ -34,6 +34,11 @@ public class ASTBNeg implements ASTNodeX {
 
         LType t = x.typecheck(e);
         if (!(t instanceof LBoolType)) throw new TypeError("Negation can only be applied to a boolean.");
+
+        if (nodeType == null || nodeType.equals(t))
+            nodeType = t;
+        else
+            throw new TypeError("Declared type and expression type differ!");
 
         return t;
     }

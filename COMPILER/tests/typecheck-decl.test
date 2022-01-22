@@ -1,0 +1,3 @@
+def x:int = true in
+    x
+end;;

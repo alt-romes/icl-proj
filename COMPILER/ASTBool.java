@@ -1,4 +1,4 @@
-public class ASTBool implements ASTNodeX {
+public class ASTBool extends AbstractASTNode implements ASTNodeX {
 
     boolean val;
 
@@ -19,9 +19,14 @@ public class ASTBool implements ASTNodeX {
         val = b;
     }
 
-    public LType typecheck(Environment<LType> e) {
+    public LType typecheck(Environment<LType> e) throws TypeError {
 
-        return LBoolType.get();
+        if (nodeType == null || nodeType.equals(LBoolType.get()))
+            nodeType = LBoolType.get();
+        else
+            throw new TypeError("Declared type and expression type differ!");
+
+        return nodeType;
     }
 }
 

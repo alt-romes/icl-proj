@@ -43,13 +43,25 @@ TOKEN :
     |
     < end: "end" >
     |
+    < lint: "int" >
+    |
+    < lbool: "bool" >
+    |
+    < lref: "ref" >
+    |
+    < fun: "fun" >
+    |
     < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
     |
     < Num: (["0"-"9"]) + >
     |
+    < COLON: ":" >
+    |
     < ASSIGN: ":=" >
     |
     < DEREF: "!" >
+    |
+    < COMMA: "," >
     |
     < SEQ: ";" >
     |
@@ -163,9 +175,9 @@ ASTNode UnaryExpression():
         | <_new> t1=UnaryExpression()   { t1 = new ASTNew(t1); }
         | <_print> t1=UnaryExpression() { t1 = new ASTPrint(t1); }
 
+        | t1 = IterationExpression()
         | t1 = DefinitionExpression()
         | t1 = SelectionExpression()
-        | t1 = IterationExpression()
 
     )
     { return t1; }  
@@ -178,10 +190,10 @@ ASTNode PrimaryExpression():
 }
 {
     (
-        tok=<Num> { t1 = new ASTNum(Integer.parseInt(tok.image)); }
-        | tok=<btrue> { t1 = new ASTBool(Boolean.parseBoolean(tok.image)); }
-        | tok=<bfalse> { t1 = new ASTBool(Boolean.parseBoolean(tok.image)); }
-        | tok=<Id> { t1 = new ASTId(tok.image); }
+        tok=<Num>                       { t1 = new ASTNum(Integer.parseInt(tok.image));      }
+        | tok=<btrue>                   { t1 = new ASTBool(Boolean.parseBoolean(tok.image)); }
+        | tok=<bfalse>                  { t1 = new ASTBool(Boolean.parseBoolean(tok.image)); }
+        | tok=<Id>                      { t1 = new ASTId(tok.image);                         }
         | <LPAR> t1=Expression() <RPAR>
     )
     { return t1; }
@@ -191,11 +203,12 @@ ASTNode DefinitionExpression():
 {
     ASTNode tf;
     Token tok;
+    LType ty = null;
     Map<String, ASTNode> m = new HashMap<>();
 }
 {
     (
-        <def> (tok=<Id> <eq> tf=Expression() { m.put(tok.image, tf); })+ <in> tf=Expression() <end>
+        <def> (tok=<Id> ( <COLON> ty=Type() )? <eq> tf=Expression() { tf.declType(ty); m.put(tok.image, tf); })+ <in> tf=Expression() <end>
     )
     { return new ASTDef(m, tf); }
 }
@@ -212,4 +225,18 @@ ASTNode IterationExpression():
 {
     <_while> t1=Expression() <_do> t2=Expression() <end>
     { return new ASTWhile(t1, t2); }
+}
+
+LType Type():
+{
+    LType ty;
+    List<LType> tyargs = new LinkedList<>();
+}
+{
+        ( <lint>           { ty = new LIntType();   }
+        | <lbool>          { ty = new LBoolType();  }
+        | <lref> ty=Type() { ty = new LRefType(ty); }
+        | (<LPAR> ty=Type() { tyargs.add(ty); } ( <COMMA> ty=Type() { tyargs.add(ty); } )* ) <RPAR> ty=Type() { ty = new LFunType(tyargs, ty); }
+        )
+        { return ty; }
 }

@@ -1,4 +1,4 @@
-public class ASTIf implements ASTNodeX {
+public class ASTIf extends AbstractASTNode implements ASTNodeX {
 
     ASTNode cond, lhs, rhs;
 
@@ -56,6 +56,11 @@ public class ASTIf implements ASTNodeX {
         LType r = rhs.typecheck(e);
         
         if (!(l.equals(r))) throw new TypeError("If: then and else branches must return the same type.");
+
+        if (nodeType == null || nodeType.equals(l))
+            nodeType = l;
+        else
+            throw new TypeError("Declared type and expression type differ!");
 
         return l;
     }

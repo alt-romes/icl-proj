@@ -32,10 +32,8 @@ sipush 1
 putfield fZo/s_0 Z
 aload 2
 getfield fZo/s_0 Z
-ifeq L5
+ifeq IfFL3
 goto IfTL2
-L5:
-goto IfFL3
 IfTL2:
 sipush 2
 goto IfEX4

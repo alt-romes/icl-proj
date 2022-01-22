@@ -1,8 +1,6 @@
-{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 module Parser where
 
-import qualified Syntax as S
 import System.IO
 import Control.Monad
 import Text.ParserCombinators.Parsec
@@ -11,25 +9,25 @@ import Text.ParserCombinators.Parsec.Language
 import qualified Text.ParserCombinators.Parsec.Token as Token
 import Data.Bifunctor
 
-data ParseExpr
-    = LitNum Integer
-    | LitBool Bool
-    | Id String
-    | Add ParseExpr ParseExpr
-    | Mul ParseExpr ParseExpr
-    | UMinus ParseExpr
-    | LogNeg ParseExpr
-    | RelEq ParseExpr ParseExpr
-    | LogOr ParseExpr ParseExpr
-    | LogAnd ParseExpr ParseExpr
-    | Def [(String, ParseExpr)] ParseExpr
-    | New ParseExpr
-    | If ParseExpr ParseExpr ParseExpr
-    | While ParseExpr ParseExpr
-    | Print ParseExpr
-    | Seq ParseExpr ParseExpr
-    | Assign ParseExpr ParseExpr
-    | Deref ParseExpr
+data UExpr
+    = ULitNum Integer
+    | ULitBool Bool
+    | UId String
+    | UAdd UExpr UExpr
+    | UMul UExpr UExpr
+    | UUMinus UExpr
+    | ULogNeg UExpr
+    | URelEq UExpr UExpr
+    | ULogOr UExpr UExpr
+    | ULogAnd UExpr UExpr
+    | UDef [(String, UExpr)] UExpr
+    | UNew UExpr
+    | UIf UExpr UExpr UExpr
+    | UWhile UExpr UExpr
+    | UPrint UExpr
+    | USeq UExpr UExpr
+    | UAssign UExpr UExpr
+    | UDeref UExpr
 
 languageDef =
     emptyDef { Token.commentStart    = "/*"
@@ -68,47 +66,47 @@ semi       = Token.semi       lexer -- parses a semicolon
 whiteSpace = Token.whiteSpace lexer -- parses whitespace
 
 
-operators :: [[Operator Char st ParseExpr]]
+operators :: [[Operator Char st UExpr]]
 operators = [
-        [Prefix (reservedOp "-" >> return UMinus),
-         Prefix (reservedOp "~" >> return LogNeg),
-         Prefix (reservedOp "new" >> return New),
-         Prefix (reservedOp "print" >> return Print),
-         Prefix (reservedOp "!" >> return Deref)
+        [Prefix (reservedOp "-" >> return UUMinus),
+         Prefix (reservedOp "~" >> return ULogNeg),
+         Prefix (reservedOp "new" >> return UNew),
+         Prefix (reservedOp "print" >> return UPrint),
+         Prefix (reservedOp "!" >> return UDeref)
         ],
 
-        [Infix  (reservedOp "*"   >> return Mul) AssocLeft],
+        [Infix  (reservedOp "*"   >> return UMul) AssocLeft],
 
-        [Infix  (reservedOp "+"   >> return Add) AssocLeft],
+        [Infix  (reservedOp "+"   >> return UAdd) AssocLeft],
 
-        [Infix  (reservedOp "=="   >> return RelEq) AssocLeft],
+        [Infix  (reservedOp "=="   >> return URelEq) AssocLeft],
 
-        [Infix  (reservedOp "&&"   >> return LogAnd) AssocLeft],
+        [Infix  (reservedOp "&&"   >> return ULogAnd) AssocLeft],
 
-        [Infix  (reservedOp "||"   >> return LogOr) AssocLeft],
+        [Infix  (reservedOp "||"   >> return ULogOr) AssocLeft],
 
-        [Infix  (reservedOp ":="   >> return Assign) AssocLeft],
+        [Infix  (reservedOp ":="   >> return UAssign) AssocLeft],
 
-        [Infix  (reservedOp ";"   >> return Seq) AssocLeft]
+        [Infix  (reservedOp ";"   >> return USeq) AssocLeft]
     ]
 
-parseExpr :: Parser ParseExpr
+parseExpr :: Parser UExpr
 parseExpr = whiteSpace >> expression
 
-expression :: Parser ParseExpr
+expression :: Parser UExpr
 expression = buildExpressionParser operators primaryExpr
 
-primaryExpr :: Parser ParseExpr
+primaryExpr :: Parser UExpr
 primaryExpr = parens expression
-            <|> Id <$> identifier
-            <|> LitNum <$> integer
-            <|> (reserved "true" >> return (LitBool True))
-            <|> (reserved "false" >> return (LitBool False))
+            <|> UId <$> identifier
+            <|> ULitNum <$> integer
+            <|> (reserved "true" >> return (ULitBool True))
+            <|> (reserved "false" >> return (ULitBool False))
             <|> definitionExpr
             <|> selectionExpr
             <|> iterationExpr
 
-definitionExpr :: Parser ParseExpr
+definitionExpr :: Parser UExpr
 definitionExpr = do
     reserved "def"
     la <- many1 (do
@@ -120,9 +118,9 @@ definitionExpr = do
     reserved "in"
     b <- expression
     reserved "end"
-    return $ Def la b
+    return $ UDef la b
 
-selectionExpr :: Parser ParseExpr
+selectionExpr :: Parser UExpr
 selectionExpr = do
     reserved "if"
     cond <- expression
@@ -131,34 +129,14 @@ selectionExpr = do
     reserved "else"
     b <- expression
     reserved "end"
-    return $ If cond a b
+    return $ UIf cond a b
 
-iterationExpr :: Parser ParseExpr
+iterationExpr :: Parser UExpr
 iterationExpr = do
     reserved "while"
     cond <- expression
     reserved "do"
     bod <- expression
     reserved "end"
-    return $ While cond bod
+    return $ UWhile cond bod
 
-
-toSyntax :: ParseExpr -> S.Expr a
-toSyntax ( LitNum a ) = S.LitNum a
-toSyntax ( LitBool a ) = S.LitBool a
-toSyntax ( Id a ) = S.Id a
-toSyntax ( Add a b ) = S.Add (toSyntax a) (toSyntax b)
-toSyntax ( Mul a b ) = S.Mul (toSyntax a) (toSyntax b) 
-toSyntax ( UMinus a ) = S.UMinus (toSyntax a)
-toSyntax ( LogNeg a ) = S.LogNeg (toSyntax a)
-toSyntax ( RelEq a b ) = S.RelEq (toSyntax a) (toSyntax b)
-toSyntax ( LogOr a b ) = S.LogOr (toSyntax a) (toSyntax b)
-toSyntax ( LogAnd a b ) = S.LogAnd (toSyntax a) (toSyntax b)
-toSyntax ( Def l a ) = S.Def (map (second toSyntax) l) (toSyntax a)
-toSyntax ( New a ) = S.New (toSyntax a)
-toSyntax ( If a b c ) = S.If (toSyntax a) (toSyntax b) (toSyntax c)
-toSyntax ( While a b ) = S.While (toSyntax a) (toSyntax b)
-toSyntax ( Print a ) = S.Print (toSyntax a)
-toSyntax ( Seq a b ) = S.Seq (toSyntax a) (toSyntax b)
-toSyntax ( Assign a b ) = S.Assign (toSyntax a) (toSyntax b)
-toSyntax ( Deref a ) = S.Deref (toSyntax a)

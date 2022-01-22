@@ -1,4 +1,4 @@
-public class ASTBOr implements ASTNodeX {
+public class ASTBOr extends AbstractASTNode implements ASTNodeX {
 
     ASTNode lhs, rhs;
 
@@ -32,10 +32,15 @@ public class ASTBOr implements ASTNodeX {
 
         LType l = lhs.typecheck(e);
         LType r = rhs.typecheck(e);
-        if (l instanceof LBoolType && r instanceof LBoolType)
-            return LBoolType.get();
+        if (!(l instanceof LBoolType && r instanceof LBoolType))
+            throw new TypeError("Logical OR must be done with two booleans");
 
-        throw new TypeError("Logical OR must be done with two booleans");
+        if (nodeType == null || nodeType.equals(LBoolType.get()))
+            nodeType = LBoolType.get();
+        else
+            throw new TypeError("Declared type and expression type differ!");
+
+        return nodeType;
     }
 }
 

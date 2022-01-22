@@ -1,4 +1,4 @@
-public class ASTSub implements ASTNode {
+public class ASTSub extends AbstractASTNode implements ASTNode {
 
     ASTNode lhs, rhs;
 
@@ -25,10 +25,15 @@ public class ASTSub implements ASTNode {
 
         LType l = lhs.typecheck(e);
         LType r = rhs.typecheck(e);
-        if (l instanceof LIntType && r instanceof LIntType)
-            return LIntType.get();
+        if (!(l instanceof LIntType && r instanceof LIntType))
+            throw new TypeError("Subtraction must be done with two integers");
 
-        throw new TypeError("Subtraction must be done with two integers");
+        if (nodeType == null || nodeType.equals(LIntType.get()))
+            nodeType = LIntType.get();
+        else
+            throw new TypeError("Declared type and expression type differ!");
+
+        return nodeType;
     }
 }
 

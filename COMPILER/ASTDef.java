@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class ASTDef implements ASTNodeX {
+public class ASTDef extends AbstractASTNode implements ASTNodeX {
 
     Map<String, ASTNode> associations;
     List<LType> associationsTypes = new ArrayList<>();
@@ -114,6 +114,12 @@ public class ASTDef implements ASTNodeX {
         LType eft = ef.typecheck(scope_env);
 
         e = scope_env.endScope(); // useless
+
+
+        if (nodeType == null || nodeType.equals(eft))
+            nodeType = eft;
+        else
+            throw new TypeError("Declared type and expression type differ!");
 
         return eft;
     }

@@ -1,4 +1,4 @@
-public class ASTSeq implements ASTNodeX {
+public class ASTSeq extends AbstractASTNode implements ASTNodeX {
 
     ASTNode lhs, rhs;
 
@@ -31,7 +31,14 @@ public class ASTSeq implements ASTNodeX {
     public LType typecheck(Environment<LType> e) throws TypeError {
 
         lhs.typecheck(e);
-        return rhs.typecheck(e);
+        LType t = rhs.typecheck(e);
+
+        if (nodeType == null || nodeType.equals(t))
+            nodeType = t;
+        else
+            throw new TypeError("Declared type and expression type differ!");
+
+        return t;
     }
 }
 

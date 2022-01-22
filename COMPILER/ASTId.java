@@ -1,4 +1,4 @@
-public class ASTId implements ASTNodeX {
+public class ASTId extends AbstractASTNode implements ASTNodeX {
 
     String id;
     LType type;
@@ -35,9 +35,15 @@ public class ASTId implements ASTNodeX {
         this.id = id;
     }
 
-    public LType typecheck(Environment<LType> e) {
+    public LType typecheck(Environment<LType> e) throws TypeError {
         type = e.find(id);
         assert(type!=null);
+
+        if (nodeType == null || nodeType.equals(type))
+            nodeType = type;
+        else
+            throw new TypeError("Declared type and expression type differ!");
+
         return type;
     }
 }
