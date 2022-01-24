@@ -2,7 +2,7 @@ import java.util.*;
 
 public class ASTDef extends AbstractASTNode implements ASTNodeX {
 
-    Map<String, ASTNode> associations;
+    List<Pair<String, ASTNode>> associations;
     List<LType> associationsTypes = new ArrayList<>();
     ASTNode ef;
 
@@ -10,8 +10,8 @@ public class ASTDef extends AbstractASTNode implements ASTNodeX {
 
         var scope_env = e.beginScope(); 
 
-        for (var entry : associations.entrySet())
-            scope_env.assoc(entry.getKey(), entry.getValue().eval(scope_env));
+        for (var entry : associations)
+            scope_env.assoc(entry.first(), entry.second().eval(scope_env));
 
         var val = ef.eval(scope_env);
 
@@ -77,11 +77,11 @@ public class ASTDef extends AbstractASTNode implements ASTNodeX {
         // so that the definitions in this scope can use previous definitions
         // defined in this same scope
         int i = 0;
-        for (var pair : associations.entrySet()) {
+        for (var pair : associations) {
             c.emit(CodeBlock.LOAD_SL);
-            pair.getValue().compile(c, scope_env);
+            pair.second().compile(c, scope_env);
             c.emit("putfield %s/s_%d %s", scope_env.frame.type, i, associationsTypes.get(i).getJVMFieldTypeName());
-            scope_env.assoc(pair.getKey(), new int[]{scope_env.depth, i});
+            scope_env.assoc(pair.first(), new int[]{scope_env.depth, i});
             i++;
         }
 
@@ -95,7 +95,7 @@ public class ASTDef extends AbstractASTNode implements ASTNodeX {
 
     }
 
-    public ASTDef(Map<String,ASTNode> m, ASTNode ef) {
+    public ASTDef(List<Pair<String,ASTNode>> m, ASTNode ef) {
         
         this.associations = m;
         this.ef = ef;
@@ -105,10 +105,12 @@ public class ASTDef extends AbstractASTNode implements ASTNodeX {
 
         var scope_env = e.beginScope(); 
 
-        for (var entry : associations.entrySet()) {
-            LType entryType = entry.getValue().typecheck(scope_env);
-            scope_env.assoc(entry.getKey(), entryType);
+        for (var entry : associations) {
+            LType entryType = entry.second().typecheck(scope_env);
+            scope_env.assoc(entry.first(), entryType);
             associationsTypes.add(entryType);
+            System.err.println( "Def + " + entry.first() );
+            scope_env.debug();
         }
 
         LType eft = ef.typecheck(scope_env);
