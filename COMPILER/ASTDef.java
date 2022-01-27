@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class ASTDef extends AbstractASTNode implements ASTNodeX {
+public class ASTDef implements ASTNodeX {
 
     List<Triple<String, LType, ASTNode>> associations;
     List<LType> associationsTypes = new ArrayList<>();

@@ -1,4 +1,4 @@
-public class ASTDeref extends AbstractASTNode implements ASTNodeX {
+public class ASTDeref implements ASTNodeX {
 
     ASTNode x;
 
@@ -36,11 +36,6 @@ public class ASTDeref extends AbstractASTNode implements ASTNodeX {
 
         x_type = ((LRefType)t);
         self_type = ((LRefType)t).getInnerType();
-
-        if (nodeType == null || nodeType.equals(self_type))
-            nodeType = self_type;
-        else
-            throw new TypeError("Declared type and expression type differ!");
 
         return self_type;
     }

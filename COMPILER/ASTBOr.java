@@ -1,4 +1,4 @@
-public class ASTBOr extends AbstractASTNode implements ASTNodeX {
+public class ASTBOr implements ASTNodeX {
 
     ASTNode lhs, rhs;
 
@@ -35,12 +35,7 @@ public class ASTBOr extends AbstractASTNode implements ASTNodeX {
         if (!(l instanceof LBoolType && r instanceof LBoolType))
             throw new TypeError("Logical OR must be done with two booleans");
 
-        if (nodeType == null || nodeType.equals(LBoolType.get()))
-            nodeType = LBoolType.get();
-        else
-            throw new TypeError("Declared type and expression type differ!");
-
-        return nodeType;
+        return LBoolType.get();
     }
 }
 

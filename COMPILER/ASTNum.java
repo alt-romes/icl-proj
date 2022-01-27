@@ -1,4 +1,4 @@
-public class ASTNum extends AbstractASTNode implements ASTNode {
+public class ASTNum implements ASTNode {
 
     int val;
 
@@ -17,12 +17,7 @@ public class ASTNum extends AbstractASTNode implements ASTNode {
 
     public LType typecheck(Environment<LType> e) throws TypeError {
 
-        if (nodeType == null || nodeType.equals(LIntType.get()))
-            nodeType = LIntType.get();
-        else
-            throw new TypeError("Declared type and expression type differ!");
-
-        return nodeType;
+        return LIntType.get();
     }
 }
 

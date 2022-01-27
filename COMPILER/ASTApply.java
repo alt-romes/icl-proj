@@ -1,6 +1,6 @@
 import java.util.List;
 import java.util.LinkedList;
-public class ASTApply extends AbstractASTNode implements ASTNodeX {
+public class ASTApply implements ASTNodeX {
 
     ASTNode f;
     List<ASTNode> params;
@@ -64,11 +64,6 @@ public class ASTApply extends AbstractASTNode implements ASTNodeX {
 
         f_type = ((LFunType)t);
         self_type = ((LFunType)t).retType;
-
-        if (nodeType == null || nodeType.equals(self_type))
-            nodeType = self_type;
-        else
-            throw new TypeError("Declared type and expression type differ!");
 
         return self_type;
     }

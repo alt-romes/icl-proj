@@ -3,7 +3,7 @@ import java.util.Collection.*;
 import java.util.stream.*;
 import java.util.stream.Collectors.*;
 
-public class ASTFunc extends AbstractASTNode implements ASTNode {
+public class ASTFunc implements ASTNode {
 
     List<Pair<String, LType>> args;
     ASTNode body;

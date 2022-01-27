@@ -1,4 +1,4 @@
-public class ASTPrint extends AbstractASTNode implements ASTNodeX {
+public class ASTPrint implements ASTNodeX {
 
     ASTNode x;
 
@@ -36,11 +36,6 @@ public class ASTPrint extends AbstractASTNode implements ASTNodeX {
     public LType typecheck(Environment<LType> e) throws TypeError {
 
         x_type = x.typecheck(e);
-
-        if (nodeType == null || nodeType.equals(x_type))
-            nodeType = x_type;
-        else
-            throw new TypeError("Declared type and expression type differ!");
 
         return x_type;
     }

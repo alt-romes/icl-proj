@@ -1,4 +1,4 @@
-public class ASTPreinc extends AbstractASTNode implements ASTNode {
+public class ASTPreinc implements ASTNode {
 
     ASTNode x;
 
@@ -39,11 +39,6 @@ public class ASTPreinc extends AbstractASTNode implements ASTNode {
         if (!(((LRefType)t).getInnerType() instanceof LIntType))
             throw new TypeError("Preinc operator can only be done on reference cells of type int.");
 
-        if (nodeType == null || nodeType.equals(LIntType.get()))
-            nodeType = LIntType.get();
-        else
-            throw new TypeError("Declared type and expression type differ!");
-
-        return nodeType;
+        return LIntType.get();
     }
 }

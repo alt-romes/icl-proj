@@ -1,4 +1,4 @@
-public class ASTUminus extends AbstractASTNode implements ASTNode {
+public class ASTUminus implements ASTNode {
 
     ASTNode x;
 
@@ -22,11 +22,6 @@ public class ASTUminus extends AbstractASTNode implements ASTNode {
 
         LType t = x.typecheck(e);
         if (!(t instanceof LIntType)) throw new TypeError("Unary minus operator takes an int.");
-
-        if (nodeType == null || nodeType.equals(t))
-            nodeType = t;
-        else
-            throw new TypeError("Declared type and expression type differ!");
 
         return t;
     }

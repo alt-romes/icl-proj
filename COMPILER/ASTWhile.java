@@ -1,4 +1,4 @@
-public class ASTWhile extends AbstractASTNode implements ASTNodeX {
+public class ASTWhile implements ASTNodeX {
 
     ASTNode cond, bod;
 
@@ -53,12 +53,7 @@ public class ASTWhile extends AbstractASTNode implements ASTNodeX {
 
         bod.typecheck(e);
 
-        if (nodeType == null || nodeType.equals(LBoolType.get()))
-            nodeType = LBoolType.get();
-        else
-            throw new TypeError("Declared type and expression type differ!");
-
-        return nodeType;
+        return LBoolType.get();
     }
 }
 

@@ -1,4 +1,4 @@
-public class ASTRelOp extends AbstractASTNode implements ASTNodeX {
+public class ASTRelOp implements ASTNodeX {
 
     ASTNode lhs, rhs;
     int op;
@@ -113,12 +113,7 @@ public class ASTRelOp extends AbstractASTNode implements ASTNodeX {
                 break;
         }
 
-        if (nodeType == null || nodeType.equals(LBoolType.get()))
-            nodeType = LBoolType.get();
-        else
-            throw new TypeError("Declared type and expression type differ!");
-
-        return nodeType;
+        return LBoolType.get();
     }
 
 }
