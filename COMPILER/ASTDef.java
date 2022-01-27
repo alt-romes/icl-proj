@@ -2,7 +2,7 @@ import java.util.*;
 
 public class ASTDef extends AbstractASTNode implements ASTNodeX {
 
-    List<Pair<String, ASTNode>> associations;
+    List<Triple<String, LType, ASTNode>> associations;
     List<LType> associationsTypes = new ArrayList<>();
     ASTNode ef;
 
@@ -11,7 +11,7 @@ public class ASTDef extends AbstractASTNode implements ASTNodeX {
         var scope_env = e.beginScope(); 
 
         for (var entry : associations)
-            scope_env.assoc(entry.first(), entry.second().eval(scope_env));
+            scope_env.assoc(entry.first(), entry.third().eval(scope_env));
 
         var val = ef.eval(scope_env);
 
@@ -77,11 +77,11 @@ public class ASTDef extends AbstractASTNode implements ASTNodeX {
         // so that the definitions in this scope can use previous definitions
         // defined in this same scope
         int i = 0;
-        for (var pair : associations) {
+        for (var entry : associations) {
             c.emit(CodeBlock.LOAD_SL);
-            pair.second().compile(c, scope_env);
+            entry.third().compile(c, scope_env);
             c.emit("putfield %s/s_%d %s", scope_env.frame.type, i, associationsTypes.get(i).getJVMFieldTypeName());
-            scope_env.assoc(pair.first(), new int[]{scope_env.depth, i});
+            scope_env.assoc(entry.first(), new int[]{scope_env.depth, i});
             i++;
         }
 
@@ -95,7 +95,7 @@ public class ASTDef extends AbstractASTNode implements ASTNodeX {
 
     }
 
-    public ASTDef(List<Pair<String,ASTNode>> m, ASTNode ef) {
+    public ASTDef(List<Triple<String,LType,ASTNode>> m, ASTNode ef) {
         
         this.associations = m;
         this.ef = ef;
@@ -106,22 +106,23 @@ public class ASTDef extends AbstractASTNode implements ASTNodeX {
         var scope_env = e.beginScope(); 
 
         for (var entry : associations) {
-            LType entryType = entry.second().typecheck(scope_env);
-            scope_env.assoc(entry.first(), entryType);
+            if (entry.second() != null)
+                scope_env.assoc(entry.first(), entry.second());
+
+            LType entryType = entry.third().typecheck(scope_env);
+            if (entry.second() == null)
+                scope_env.assoc(entry.first(), entryType);
+
+            if (entry.second() != null &&
+                    !entry.second().equals(entryType))
+                throw new TypeError("Declared type and expression type differ!");
+
             associationsTypes.add(entryType);
-            System.err.println( "Def + " + entry.first() );
-            scope_env.debug();
         }
 
         LType eft = ef.typecheck(scope_env);
 
         e = scope_env.endScope(); // useless
-
-
-        if (nodeType == null || nodeType.equals(eft))
-            nodeType = eft;
-        else
-            throw new TypeError("Declared type and expression type differ!");
 
         return eft;
     }

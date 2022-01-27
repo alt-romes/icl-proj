@@ -32,7 +32,7 @@ new ref_of_I
 dup
 invokespecial ref_of_I/<init>()V
 dup
-sipush 0
+sipush 10
 putfield ref_of_I/v I
 putfield fref_of_Iref_of_Io/s_0 Lref_of_I;
 aload 2
@@ -40,12 +40,12 @@ new ref_of_I
 dup
 invokespecial ref_of_I/<init>()V
 dup
-sipush 10
+sipush 0
 putfield ref_of_I/v I
 putfield fref_of_Iref_of_Io/s_1 Lref_of_I;
 LWhileStart0:
 aload 2
-getfield fref_of_Iref_of_Io/s_1 Lref_of_I;
+getfield fref_of_Iref_of_Io/s_0 Lref_of_I;
 getfield ref_of_I/v I
 sipush 0
 isub
@@ -53,23 +53,23 @@ ifgt LWhileTL1
 goto LWhileFL2
 LWhileTL1:
 aload 2
-getfield fref_of_Iref_of_Io/s_0 Lref_of_I;
+getfield fref_of_Iref_of_Io/s_1 Lref_of_I;
 dup
 aload 2
-getfield fref_of_Iref_of_Io/s_0 Lref_of_I;
+getfield fref_of_Iref_of_Io/s_1 Lref_of_I;
 getfield ref_of_I/v I
 aload 2
-getfield fref_of_Iref_of_Io/s_1 Lref_of_I;
+getfield fref_of_Iref_of_Io/s_0 Lref_of_I;
 getfield ref_of_I/v I
 iadd
 putfield ref_of_I/v I
 getfield ref_of_I/v I
 pop
 aload 2
-getfield fref_of_Iref_of_Io/s_1 Lref_of_I;
+getfield fref_of_Iref_of_Io/s_0 Lref_of_I;
 dup
 aload 2
-getfield fref_of_Iref_of_Io/s_1 Lref_of_I;
+getfield fref_of_Iref_of_Io/s_0 Lref_of_I;
 getfield ref_of_I/v I
 sipush 1
 isub
@@ -81,7 +81,7 @@ LWhileFL2:
 sipush 0
 pop
 aload 2
-getfield fref_of_Iref_of_Io/s_0 Lref_of_I;
+getfield fref_of_Iref_of_Io/s_1 Lref_of_I;
 getfield ref_of_I/v I
 dup
 getstatic java/lang/System/out Ljava/io/PrintStream;

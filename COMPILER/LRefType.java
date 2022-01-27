@@ -3,7 +3,7 @@ import java.io.IOException;
 
 public class LRefType implements LType {
 
-    LType valType;
+    public LType valType;
 
     public LRefType(LType t) { valType = t; }
 

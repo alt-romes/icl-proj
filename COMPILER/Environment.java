@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Environment<T> {
+public class Environment<T> implements Cloneable {
     Map<String, T> associations = new HashMap<>();
     public int depth = 0;
 
@@ -43,4 +43,18 @@ public class Environment<T> {
             return null;
         }
     }
+
+    void debug() {
+
+        System.err.println( "Environment:" );
+        for (var entry : associations.entrySet()) {
+            System.err.println(entry.getKey());
+        }
+
+        if (parent != null) {
+            System.err.println( "Parent:" );
+            parent.debug();
+        }
+    }
+
 }

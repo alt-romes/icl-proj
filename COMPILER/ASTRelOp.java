@@ -22,6 +22,8 @@ public class ASTRelOp extends AbstractASTNode implements ASTNodeX {
                 return new LBool(v1i > v2i);
             case ParserConstants.RELGE:
                 return new LBool(v1i >= v2i);
+            case ParserConstants.RELNE:
+                return new LBool(v1i != v2i);
         }
 
         assert(false);
@@ -38,7 +40,6 @@ public class ASTRelOp extends AbstractASTNode implements ASTNodeX {
             case ParserConstants.RELEQ:
                 c.emit("ifeq " + l1);
                 break;
-            /* case  RELNEQ ... c.emit("ifne " + tl); */
             case ParserConstants.RELL:
                 c.emit("iflt " + l1);
                 break;
@@ -50,6 +51,9 @@ public class ASTRelOp extends AbstractASTNode implements ASTNodeX {
                 break;
             case ParserConstants.RELGE:
                 c.emit("ifge " + l1);
+                break;
+            case ParserConstants.RELNE:
+                c.emit("ifne " + l1);
                 break;
         }
         c.emit("sipush 0");
@@ -67,7 +71,6 @@ public class ASTRelOp extends AbstractASTNode implements ASTNodeX {
             case ParserConstants.RELEQ:
                 c.emit("ifeq " + tl);
                 break;
-            /* case  RELNEQ ... c.emit("ifne " + tl); */
             case ParserConstants.RELL:
                 c.emit("iflt " + tl);
                 break;
@@ -79,6 +82,9 @@ public class ASTRelOp extends AbstractASTNode implements ASTNodeX {
                 break;
             case ParserConstants.RELGE:
                 c.emit("ifge " + tl);
+                break;
+            case ParserConstants.RELNE:
+                c.emit("ifne " + tl);
                 break;
         }
         c.emit("goto " + fl);

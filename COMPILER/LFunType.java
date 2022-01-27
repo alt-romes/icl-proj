@@ -2,8 +2,8 @@ import java.util.List;
 
 public class LFunType implements LType {
 
-    List<LType> argsTypes;
-    LType retType;
+    public List<LType> argsTypes;
+    public LType retType;
 
     public LFunType(List<LType> l, LType t) { argsTypes = l; retType = t; }
 
@@ -12,8 +12,13 @@ public class LFunType implements LType {
     // TODO
     public boolean equals(LType o) {
 
-        return false;
-        // return o instanceof LRefType && valType.equals(((LRefType)o).valType);
+        if (!(o instanceof LFunType)) return false;
+
+        for (int i = 0; i < argsTypes.size(); i++)
+            if (!argsTypes.get(i).equals(((LFunType)o).argsTypes.get(i)))
+                return false;
+
+        return retType.equals(((LFunType)o).retType);
     }
 
     @Override

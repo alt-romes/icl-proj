@@ -14,8 +14,10 @@ public class Interpreter {
                 if (ast == null)
                     System.exit(0);
 
+                System.err.println( "Typechecking..." );
                 ast.typecheck(new Environment<LType>());
 
+                System.err.println( "Evaluating..." );
                 ast.eval(new Environment<LValue>()).show();
 
             } catch (TypeError e) {
