@@ -36,14 +36,18 @@ public class Compiler {
 
         try {
 
+            System.err.println( "Typechecking..." );
             ast.typecheck(new Environment<>());
 
             var cb = new CodeBlock();
             Environment<int[]> env = new Environment<>();
             env.assocFrameType(new Frame()); // Empty frame has type Object, and first scope will have a null pointer to ancestor of type Object (this frame's type)
 
+            System.err.println( "Compiling..." );
             ast.compile(cb, env);
 
+            Set<String> closures_names = cb.dumpClosures();
+            Set<String> closures_interfaces_names = cb.dumpClosuresInterfaces();
             Set<String> refcells_names = cb.dumpRefCells();
             Set<String> frames_names = cb.dumpFrames();
             cb.dump("Main.j");
@@ -53,8 +57,13 @@ public class Compiler {
                 exec.append(" ").append(f).append(".j");
             for (var t : refcells_names)
                 exec.append(" ").append(t).append(".j");
+            for (var t : closures_names)
+                exec.append(" ").append(t).append(".j");
+            for (var t : closures_interfaces_names)
+                exec.append(" ").append(t).append(".j");
             System.out.println(exec);
 
+            System.err.println( "Compiling jasmin..." );
             Runtime.getRuntime().exec(exec.toString()).waitFor();
 
         } catch (TypeError e) {

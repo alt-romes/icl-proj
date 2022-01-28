@@ -1,0 +1,150 @@
+java -jar jasmin.jar Main.j fIref_of_Iref_of_Iref_of_Zo.j ref_of_I.j ref_of_Z.j
+.class public Main
+.super java/lang/Object
+
+; standard initializer
+.method public <init>()V
+    aload_0
+    invokenonvirtual java/lang/Object/<init>()V
+    return
+.end method
+
+.method public static main([Ljava/lang/String;)V
+    ; set limits used by this method
+    .limit locals 10
+    .limit stack 256
+
+    ; Move null to local main variable
+    aconst_null
+    astore 2
+
+    ; START
+
+new fIref_of_Iref_of_Iref_of_Zo
+dup
+invokespecial fIref_of_Iref_of_Iref_of_Zo/<init>()V
+dup
+aload 2
+putfield fIref_of_Iref_of_Iref_of_Zo/sl Ljava/lang/Object;
+astore 2
+aload 2
+sipush 23
+putfield fIref_of_Iref_of_Iref_of_Zo/s_0 I
+aload 2
+new ref_of_I
+dup
+invokespecial ref_of_I/<init>()V
+dup
+sipush 2
+putfield ref_of_I/v I
+putfield fIref_of_Iref_of_Iref_of_Zo/s_1 Lref_of_I;
+aload 2
+new ref_of_I
+dup
+invokespecial ref_of_I/<init>()V
+dup
+sipush 0
+putfield ref_of_I/v I
+putfield fIref_of_Iref_of_Iref_of_Zo/s_2 Lref_of_I;
+aload 2
+new ref_of_Z
+dup
+invokespecial ref_of_Z/<init>()V
+dup
+sipush 1
+putfield ref_of_Z/v Z
+putfield fIref_of_Iref_of_Iref_of_Zo/s_3 Lref_of_Z;
+LWhileStart0:
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_1 Lref_of_I;
+getfield ref_of_I/v I
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_0 I
+isub
+iflt LWhileTL1aux3
+goto LWhileFL2
+LWhileTL1aux3:
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_3 Lref_of_Z;
+getfield ref_of_Z/v Z
+ifeq LWhileFL2
+goto LWhileTL1
+LWhileTL1:
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_2 Lref_of_I;
+dup
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_0 I
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_1 Lref_of_I;
+getfield ref_of_I/v I
+idiv
+putfield ref_of_I/v I
+getfield ref_of_I/v I
+pop
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_2 Lref_of_I;
+getfield ref_of_I/v I
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_1 Lref_of_I;
+getfield ref_of_I/v I
+imul
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_0 I
+isub
+ifeq IfTL4
+goto IfFL5
+IfTL4:
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_3 Lref_of_Z;
+dup
+sipush 0
+putfield ref_of_Z/v Z
+getfield ref_of_Z/v Z
+goto IfEX6
+IfFL5:
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_3 Lref_of_Z;
+dup
+sipush 1
+putfield ref_of_Z/v Z
+getfield ref_of_Z/v Z
+IfEX6:
+pop
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_1 Lref_of_I;
+dup
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_1 Lref_of_I;
+getfield ref_of_I/v I
+sipush 1
+iadd
+putfield ref_of_I/v I
+getfield ref_of_I/v I
+pop
+goto LWhileStart0
+LWhileFL2:
+sipush 0
+pop
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_3 Lref_of_Z;
+getfield ref_of_Z/v Z
+dup
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokestatic java/lang/String/valueOf(Z)Ljava/lang/String;
+invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+pop
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/s_3 Lref_of_Z;
+getfield ref_of_Z/v Z
+aload 2
+getfield fIref_of_Iref_of_Iref_of_Zo/sl Ljava/lang/Object;
+astore 2
+    ; END
+
+    ; Remove from stack expression value
+    pop
+
+    return
+.end method

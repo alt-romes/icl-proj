@@ -1,0 +1,91 @@
+java -jar jasmin.jar Main.j fIIfIo.j fIo.j fIfIIfIo.j
+.class public Main
+.super java/lang/Object
+
+; standard initializer
+.method public <init>()V
+    aload_0
+    invokenonvirtual java/lang/Object/<init>()V
+    return
+.end method
+
+.method public static main([Ljava/lang/String;)V
+    ; set limits used by this method
+    .limit locals 10
+    .limit stack 256
+
+    ; Move null to local main variable
+    aconst_null
+    astore 2
+
+    ; START
+
+new fIo
+dup
+invokespecial fIo/<init>()V
+dup
+aload 2
+putfield fIo/sl Ljava/lang/Object;
+astore 2
+aload 2
+sipush 2
+putfield fIo/s_0 I
+new fIIfIo
+dup
+invokespecial fIIfIo/<init>()V
+dup
+aload 2
+putfield fIIfIo/sl LfIo;
+astore 2
+aload 2
+sipush 3
+putfield fIIfIo/s_0 I
+aload 2
+sipush 6
+putfield fIIfIo/s_1 I
+new fIfIIfIo
+dup
+invokespecial fIfIIfIo/<init>()V
+dup
+aload 2
+putfield fIfIIfIo/sl LfIIfIo;
+astore 2
+aload 2
+aload 2
+getfield fIfIIfIo/sl LfIIfIo;
+getfield fIIfIo/s_1 I
+aload 2
+getfield fIfIIfIo/sl LfIIfIo;
+getfield fIIfIo/sl LfIo;
+getfield fIo/s_0 I
+aload 2
+getfield fIfIIfIo/sl LfIIfIo;
+getfield fIIfIo/s_0 I
+iadd
+imul
+putfield fIfIIfIo/s_0 I
+aload 2
+getfield fIfIIfIo/s_0 I
+sipush 5
+iadd
+aload 2
+getfield fIfIIfIo/sl LfIIfIo;
+astore 2
+aload 2
+getfield fIIfIo/sl LfIo;
+astore 2
+dup
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
+invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+aload 2
+getfield fIo/sl Ljava/lang/Object;
+astore 2
+    ; END
+
+    ; Remove from stack expression value
+    pop
+
+    return
+.end method

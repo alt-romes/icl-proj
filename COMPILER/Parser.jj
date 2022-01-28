@@ -21,6 +21,8 @@ TOKEN :
     |
     < _print: "print" >
     |
+    < _println: "println" >
+    |
     < _if: "if" >
     |
     < _then: "then" >
@@ -182,7 +184,7 @@ ASTNode UnaryExpression():
         | <BNEG> t1=UnaryExpression()   { t1 = new ASTBNeg(t1); }
         | <DEREF> t1=UnaryExpression()  { t1 = new ASTDeref(t1); }
         | <_new> t1=UnaryExpression()   { t1 = new ASTNew(t1); }
-        | <_print> t1=UnaryExpression() { t1 = new ASTPrint(t1); }
+        | (<_print> | <_println>) t1=UnaryExpression() { t1 = new ASTPrint(t1); }
 
         | t1 = FunctionExpression()
         | t1 = IterationExpression()
@@ -255,10 +257,10 @@ LType Type():
     List<LType> tyargs = new LinkedList<>();
 }
 {
-        ( <lint>           { ty = new LIntType();   }
-        | <lbool>          { ty = new LBoolType();  }
-        | <lref> ty=Type() { ty = new LRefType(ty); }
-        | (<LPAR> ( ty=Type() { tyargs.add(ty); } )? ( <COMMA> ty=Type() { tyargs.add(ty); } )* ) <RPAR> ty=Type() { ty = new LFunType(tyargs, ty); }
+        ( <lint>              { ty = new LIntType();   }
+        | <lbool>             { ty = new LBoolType();  }
+        | <lref> ty=Type()    { ty = new LRefType(ty); }
+        | (<LPAR> ( ty=Type() { tyargs.add(ty); } )? ( <COMMA> ty=Type() { tyargs.add(ty); } )* ) <RPAR> ty=Type() { ty = new LFunType(tyargs, ty, true); }
         )
         { return ty; }
 }

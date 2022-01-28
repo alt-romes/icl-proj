@@ -42,6 +42,9 @@ public class CodeBlock {
 
     public Map<String, Frame> frame_types = new HashMap<>();
 
+    private final Map<String, Triple<LFunType, CodeBlock, Environment<int[]>>> closures = new HashMap<>();
+    private final Map<String, LFunType> closures_interfaces = new HashMap<>();
+
     private final Map<String, LRefType> refcell_types = new HashMap<>();
 
     List<String> code = new LinkedList<String>();
@@ -73,13 +76,24 @@ public class CodeBlock {
         return refcell_types.keySet();
     }
 
+    Set<String> dumpClosures() {
+        for (var t : closures.values())
+            t.first().dumpClosure(t.second().getCode(), t.third());
+        return closures.keySet();
+    };
+
+    Set<String> dumpClosuresInterfaces() {
+        for (var t : closures_interfaces.values())
+            t.dumpInterface();
+        return closures_interfaces.keySet();
+    };
+
     void dump(String filename) {
         try {
             FileWriter fw = new FileWriter(filename);
             fw.write(head);
-            for (String s : code) {
+            for (String s : code)
                 fw.write(s + "\n");
-            }
             fw.write(tail);
             fw.close();
         }
@@ -87,6 +101,8 @@ public class CodeBlock {
             System.err.println(e);
         } 
     }
+
+    public List<String> getCode() { return code; }
     
     CodeBlock() { }
 
@@ -94,5 +110,16 @@ public class CodeBlock {
 
         String key = type.getJVMTypeName();
         refcell_types.putIfAbsent(key, type);
+    }
+
+    public CodeBlock addClosure(LFunType ty, Environment<int[]> e) {
+
+        assert(ty.getClosureId() != -1);
+
+        CodeBlock clos = new CodeBlock();
+        closures.put(ty.getJVMTypeName(), new Triple<>(ty, clos, e));
+        closures_interfaces.putIfAbsent(ty.getJVMInterfaceTypeName(), ty);
+
+        return clos;
     }
 }

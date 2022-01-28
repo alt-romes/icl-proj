@@ -11,10 +11,6 @@ public class LFunc implements LValue {
         body = b;
     }
 
-    // public LValue get() { return val; } 
-
-    // public void set(LValue v) { val = v; }
-
     public Environment<LValue> beginScope() {
 
         return e.beginScope();

@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Environment<T> implements Cloneable {
+public class Environment<T> {
     Map<String, T> associations = new HashMap<>();
     public int depth = 0;
 

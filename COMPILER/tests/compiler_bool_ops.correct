@@ -1,0 +1,88 @@
+java -jar jasmin.jar Main.j fIIIo.j
+.class public Main
+.super java/lang/Object
+
+; standard initializer
+.method public <init>()V
+    aload_0
+    invokenonvirtual java/lang/Object/<init>()V
+    return
+.end method
+
+.method public static main([Ljava/lang/String;)V
+    ; set limits used by this method
+    .limit locals 10
+    .limit stack 256
+
+    ; Move null to local main variable
+    aconst_null
+    astore 2
+
+    ; START
+
+new fIIIo
+dup
+invokespecial fIIIo/<init>()V
+dup
+aload 2
+putfield fIIIo/sl Ljava/lang/Object;
+astore 2
+aload 2
+sipush 2
+putfield fIIIo/s_0 I
+aload 2
+sipush 3
+putfield fIIIo/s_1 I
+aload 2
+sipush 5
+putfield fIIIo/s_2 I
+aload 2
+getfield fIIIo/s_0 I
+aload 2
+getfield fIIIo/s_1 I
+isub
+ifgt IfTL0
+goto IfFL1
+IfTL0:
+aload 2
+getfield fIIIo/s_0 I
+aload 2
+getfield fIIIo/s_2 I
+isub
+ifne L3
+sipush 0
+goto L4
+L3:
+sipush 1
+L4:
+goto IfEX2
+IfFL1:
+sipush 0
+aload 2
+getfield fIIIo/s_1 I
+aload 2
+getfield fIIIo/s_2 I
+isub
+ifne L5
+sipush 0
+goto L6
+L5:
+sipush 1
+L6:
+ior
+IfEX2:
+dup
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokestatic java/lang/String/valueOf(Z)Ljava/lang/String;
+invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+aload 2
+getfield fIIIo/sl Ljava/lang/Object;
+astore 2
+    ; END
+
+    ; Remove from stack expression value
+    pop
+
+    return
+.end method

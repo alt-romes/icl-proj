@@ -78,10 +78,10 @@ public class ASTDef implements ASTNodeX {
         // defined in this same scope
         int i = 0;
         for (var entry : associations) {
+            scope_env.assoc(entry.first(), new int[]{scope_env.depth, i});
             c.emit(CodeBlock.LOAD_SL);
             entry.third().compile(c, scope_env);
             c.emit("putfield %s/s_%d %s", scope_env.frame.type, i, associationsTypes.get(i).getJVMFieldTypeName());
-            scope_env.assoc(entry.first(), new int[]{scope_env.depth, i});
             i++;
         }
 
@@ -110,8 +110,7 @@ public class ASTDef implements ASTNodeX {
                 scope_env.assoc(entry.first(), entry.second());
 
             LType entryType = entry.third().typecheck(scope_env);
-            if (entry.second() == null)
-                scope_env.assoc(entry.first(), entryType);
+            scope_env.assoc(entry.first(), entryType); // Always overwrite with calculated type. This is important because each function type gets assigned an id, and we want to reason with the actual function type, rather than the declared function type (even though they should be the same. this is a bit of a hacky implementation anyway...)
 
             if (entry.second() != null &&
                     !entry.second().equals(entryType))

@@ -1,0 +1,213 @@
+java -jar jasmin.jar Main.j fclosure_3ref_of_Iclosure_4closure_5o.j fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o.j ffclosure_3ref_of_Iclosure_4closure_5o.j fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o.j fIIfclosure_3ref_of_Iclosure_4closure_5o.j ref_of_I.j closure_3.j closure_4.j closure_5.j closure_interface_I_I_I.j closure_interface_I.j closure_interface_Z_I_I.j
+.class public Main
+.super java/lang/Object
+
+; standard initializer
+.method public <init>()V
+    aload_0
+    invokenonvirtual java/lang/Object/<init>()V
+    return
+.end method
+
+.method public static main([Ljava/lang/String;)V
+    ; set limits used by this method
+    .limit locals 10
+    .limit stack 256
+
+    ; Move null to local main variable
+    aconst_null
+    astore 2
+
+    ; START
+
+new fclosure_3ref_of_Iclosure_4closure_5o
+dup
+invokespecial fclosure_3ref_of_Iclosure_4closure_5o/<init>()V
+dup
+aload 2
+putfield fclosure_3ref_of_Iclosure_4closure_5o/sl Ljava/lang/Object;
+astore 2
+aload 2
+new closure_3
+dup
+invokespecial closure_3/<init>()V
+dup
+aload 2
+putfield closure_3/sl Lfclosure_3ref_of_Iclosure_4closure_5o;
+putfield fclosure_3ref_of_Iclosure_4closure_5o/s_0 Lclosure_3;
+aload 2
+new ref_of_I
+dup
+invokespecial ref_of_I/<init>()V
+dup
+sipush 2
+putfield ref_of_I/v I
+putfield fclosure_3ref_of_Iclosure_4closure_5o/s_1 Lref_of_I;
+aload 2
+new closure_4
+dup
+invokespecial closure_4/<init>()V
+dup
+aload 2
+putfield closure_4/sl Lfclosure_3ref_of_Iclosure_4closure_5o;
+putfield fclosure_3ref_of_Iclosure_4closure_5o/s_2 Lclosure_4;
+aload 2
+new closure_5
+dup
+invokespecial closure_5/<init>()V
+dup
+aload 2
+putfield closure_5/sl Lfclosure_3ref_of_Iclosure_4closure_5o;
+putfield fclosure_3ref_of_Iclosure_4closure_5o/s_3 Lclosure_5;
+new fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o
+dup
+invokespecial fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/<init>()V
+dup
+aload 2
+putfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfclosure_3ref_of_Iclosure_4closure_5o;
+astore 2
+aload 2
+new ref_of_I
+dup
+invokespecial ref_of_I/<init>()V
+dup
+sipush 0
+putfield ref_of_I/v I
+putfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_0 Lref_of_I;
+aload 2
+new ref_of_I
+dup
+invokespecial ref_of_I/<init>()V
+dup
+sipush 0
+putfield ref_of_I/v I
+putfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_1 Lref_of_I;
+aload 2
+new ref_of_I
+dup
+invokespecial ref_of_I/<init>()V
+dup
+sipush 0
+putfield ref_of_I/v I
+putfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_2 Lref_of_I;
+LWhileStart2:
+aload 2
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_0 Lref_of_I;
+getfield ref_of_I/v I
+sipush 30000
+isub
+iflt LWhileTL3
+goto LWhileFL4
+LWhileTL3:
+new fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o
+dup
+invokespecial fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/<init>()V
+dup
+aload 2
+putfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o;
+astore 2
+aload 2
+aload 2
+getfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o;
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfclosure_3ref_of_Iclosure_4closure_5o;
+getfield fclosure_3ref_of_Iclosure_4closure_5o/s_2 Lclosure_4;
+checkcast closure_interface_I
+invokeinterface closure_interface_I/apply()I 1
+putfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_0 I
+aload 2
+aload 2
+getfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o;
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfclosure_3ref_of_Iclosure_4closure_5o;
+getfield fclosure_3ref_of_Iclosure_4closure_5o/s_2 Lclosure_4;
+checkcast closure_interface_I
+invokeinterface closure_interface_I/apply()I 1
+putfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_1 I
+aload 2
+getfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o;
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfclosure_3ref_of_Iclosure_4closure_5o;
+getfield fclosure_3ref_of_Iclosure_4closure_5o/s_3 Lclosure_5;
+checkcast closure_interface_Z_I_I
+aload 2
+getfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_0 I
+aload 2
+getfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_1 I
+invokeinterface closure_interface_Z_I_I/apply(II)Z 3
+ifeq IfFL6
+goto IfTL5
+IfTL5:
+aload 2
+getfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o;
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_1 Lref_of_I;
+dup
+aload 2
+getfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o;
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_1 Lref_of_I;
+getfield ref_of_I/v I
+sipush 1
+iadd
+putfield ref_of_I/v I
+getfield ref_of_I/v I
+goto IfEX7
+IfFL6:
+aload 2
+getfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o;
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_1 Lref_of_I;
+getfield ref_of_I/v I
+IfEX7:
+pop
+aload 2
+getfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o;
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_0 Lref_of_I;
+dup
+aload 2
+getfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o;
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_0 Lref_of_I;
+getfield ref_of_I/v I
+sipush 1
+iadd
+putfield ref_of_I/v I
+getfield ref_of_I/v I
+aload 2
+getfield fIIfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o;
+astore 2
+pop
+goto LWhileStart2
+LWhileFL4:
+sipush 0
+pop
+aload 2
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_2 Lref_of_I;
+dup
+sipush 4
+aload 2
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_1 Lref_of_I;
+getfield ref_of_I/v I
+imul
+sipush 100
+imul
+sipush 30000
+idiv
+putfield ref_of_I/v I
+getfield ref_of_I/v I
+pop
+aload 2
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/s_2 Lref_of_I;
+getfield ref_of_I/v I
+dup
+getstatic java/lang/System/out Ljava/io/PrintStream;
+swap
+invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
+invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+aload 2
+getfield fref_of_Iref_of_Iref_of_Ifclosure_3ref_of_Iclosure_4closure_5o/sl Lfclosure_3ref_of_Iclosure_4closure_5o;
+astore 2
+aload 2
+getfield fclosure_3ref_of_Iclosure_4closure_5o/sl Ljava/lang/Object;
+astore 2
+    ; END
+
+    ; Remove from stack expression value
+    pop
+
+    return
+.end method

@@ -5,6 +5,7 @@ public class ASTApply implements ASTNodeX {
     ASTNode f;
     List<ASTNode> params;
 
+    List<LType> params_types;
     LFunType f_type;
     LType self_type;
 
@@ -31,8 +32,16 @@ public class ASTApply implements ASTNodeX {
     }
     
     public void compile(CodeBlock c, Environment<int[]> e) {
-        // x.compile(c, e);
-        // c.emit("getfield %s/v %s", x_type.getJVMTypeName(), self_type.getJVMTypeName());
+        f.compile(c, e);
+        c.emit("checkcast %s", f_type.getJVMInterfaceTypeName());
+        for (var arg : params)
+            arg.compile(c, e);
+        String invokeStr = "invokeinterface %s/apply(";
+        int i = 0;
+        for (var arg : params_types)
+            invokeStr += arg.getJVMFieldTypeName(); // + (++i == params_types.size() ? "" : ";");
+        invokeStr += ")" + self_type.getJVMFieldTypeName() + " " + (params.size() + 1);
+        c.emit(invokeStr, f_type.getJVMInterfaceTypeName());
     }
 
     public void compileShortCircuit(CodeBlock c, Environment<int[]> e, String tl, String fl) {
@@ -62,6 +71,7 @@ public class ASTApply implements ASTNodeX {
             if (!paramTypes.get(i).equals(((LFunType)t).argsTypes.get(i)))
                 throw new TypeError("Function arguments and passed parameters types don't match.");
 
+        params_types = paramTypes;
         f_type = ((LFunType)t);
         self_type = ((LFunType)t).retType;
 

@@ -1,0 +1,5 @@
+def 
+    a = new 5
+in
+    !a
+end;;
