@@ -37,7 +37,7 @@ script `run-tests.sh` is executed.
 
 Additionally, I developed another compiler that parses the ANSI C language and
 generates LLVM IR code. This compiler supports a big part of the ANSI C
-language, and missing `structs` and `enums`, `storage_classifiers`, among some
+language, but is missing `structs`, `enums` and `storage_classifiers`, among some
 other quite specific things. The project is also hosted on github: https://github.com/alt-romes/c-compiler
 It also has an extensive (for every feature) test battery under `/compiler-tests`
 
