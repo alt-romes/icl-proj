@@ -50,3 +50,7 @@ void* (*f(void* (*(*p)(int (*)[2]))[]))[] {
     return x;
 }
 ```
+
+#### The Haskell Version
+
+Um dia comecei a reescrever o compilador em haskell mas começou a ser demasiado trabalho repetitivo então desisti antes de ter resultados, no entanto mantive a directoria com o código neste repositório sobre o nome: `/HC` (haskell compiler)
